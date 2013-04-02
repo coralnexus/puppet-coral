@@ -3,8 +3,7 @@ define coral::services (
 
   $resources = {},
   $overrides = {},
-  $defaults  = {},
-  $tag       = 'coral'
+  $defaults  = {}
 
 ) {
 
@@ -23,6 +22,6 @@ define coral::services (
   }
 
   $data = flatten([ $resources, $override_data ])
-  coral_resources('@service', $data, $default_data, $tag)
-  Service<| tag == $tag |>
+  coral_resources('@service', $data, $default_data, $name)
+  Service<| tag == $name |>
 }

@@ -3,8 +3,7 @@ define coral::packages (
 
   $resources = {},
   $overrides = {},
-  $defaults  = {},
-  $tag       = 'coral'
+  $defaults  = {}
 
 ) {
 
@@ -23,6 +22,6 @@ define coral::packages (
   }
 
   $data = flatten([ $resources, $override_data ])
-  coral_resources('@package', $data, $default_data, $tag)
-  Package<| tag == $tag |>
+  coral_resources('@package', $data, $default_data, $name)
+  Package<| tag == $name |>
 }

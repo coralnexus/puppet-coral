@@ -3,8 +3,7 @@ define coral::files (
 
   $resources = {},
   $overrides = {},
-  $defaults  = {},
-  $tag       = 'coral'
+  $defaults  = {}
 
 ) {
 
@@ -23,6 +22,6 @@ define coral::files (
   }
 
   $data = flatten([ $resources, $override_data ])
-  coral_resources('@file', $data, $default_data, $tag)
-  File<| tag == $tag |>
+  coral_resources('@file', $data, $default_data, $name)
+  File<| tag == $name |>
 }

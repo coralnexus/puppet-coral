@@ -3,8 +3,7 @@ define coral::cron (
 
   $resources = {},
   $overrides = {},
-  $defaults  = {},
-  $tag       = 'coral'
+  $defaults  = {}
 
 ) {
 
@@ -23,6 +22,6 @@ define coral::cron (
   }
 
   $data = flatten([ $resources, $override_data ])
-  coral_resources('@cron', $data, $default_data, $tag)
-  Cron<| tag == $tag |>
+  coral_resources('@cron', $data, $default_data, $name)
+  Cron<| tag == $name |>
 }

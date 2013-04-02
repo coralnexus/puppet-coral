@@ -9,10 +9,13 @@ class global::runtime (
   #-----------------------------------------------------------------------------
   # Installation
 
-  if ! empty($packages) {
-    package { 'global-runtime-packages':
-      name   => $packages,
-      ensure => $ensure,
-    }
+  global::packages { 'global-runtime':
+    resources => {
+      'global-runtime-packages' => {
+        name => $packages
+      }
+    },
+    overrides => 'global::runtime_packages',
+    defaults  => { ensure => $ensure }
   }
 }

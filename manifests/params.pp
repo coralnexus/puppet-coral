@@ -1,36 +1,48 @@
 
-class global::params inherits global::default {
+class global::params {
 
-  $setup_packages           = module_array('setup_packages')
-  $setup_ensure             = module_param('setup_ensure')
-  $build_packages           = module_array('build_packages')
-  $build_ensure             = module_param('build_ensure')
-  $common_packages          = module_array('common_packages')
-  $common_ensure            = module_param('common_ensure')
-  $runtime_packages         = module_array('runtime_packages')
-  $runtime_ensure           = module_param('runtime_ensure')
+  $setup_ensure   = 'present'
+  $build_ensure   = 'present'
+  $common_ensure  = 'present'
+  $runtime_ensure = 'present'
 
-  #---
+  $facts          = {}
 
-  $apt_always_apt_update    = module_param('apt_always_apt_update')
-  $apt_disable_keys         = module_param('apt_disable_keys')
-  $apt_proxy_host           = module_param('apt_proxy_host')
-  $apt_proxy_port           = module_param('apt_proxy_port')
-  $apt_purge_sources_list   = module_param('apt_purge_sources_list')
-  $apt_purge_sources_list_d = module_param('apt_purge_sources_list_d')
-  $apt_purge_preferences_d  = module_param('apt_purge_preferences_d')
+  $allow_icmp     = true
 
   #---
 
-  $facts                    = module_hash('facts')
-  $fact_environment         = module_param('fact_environment')
-  $facts_template           = module_param('facts_template')
+  case $::operatingsystem {
+    debian, ubuntu: {
+      $exec_path                = [ '/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin' ]
+      $exec_user                = 'root'
+      $exec_group               = 'root'
 
-  #---
+      $apt_always_apt_update    = false
+      $apt_disable_keys         = undef
+      $apt_proxy_host           = false
+      $apt_proxy_port           = '8080'
+      $apt_purge_sources_list   = false
+      $apt_purge_sources_list_d = false
+      $apt_purge_preferences_d  = false
 
-  $make_revision            = module_param('make_revision')
-  $make_dev_ensure          = module_param('make_dev_ensure')
-  $make_user                = module_param('make_user')
-  $make_group               = module_param('make_group')
-  $make_options             = module_param('make_options')
+      $setup_packages           = []
+      $common_packages          = [ 'vim', 'unzip', 'curl' ]
+      $build_packages           = [
+        'build-essential',
+        'libnl-dev',
+        'libpopt-dev',
+        'libxml2-dev',
+        'libssl-dev',
+        'libcurl4-openssl-dev',
+      ]
+      $runtime_packages         = []
+
+      $fact_environment         = '/etc/profile.d/facts.sh'
+      $facts_template           = 'global/facts.sh.erb'
+    }
+    default: {
+      fail("The global module is not currently supported on ${::operatingsystem}")
+    }
+  }
 }

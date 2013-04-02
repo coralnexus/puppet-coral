@@ -1,59 +1,82 @@
 
 define global::make (
 
-  $repo         = $name,
-  $source       = '',
-  $revision     = $global::params::make_revision,
-  $dev_packages = [],
-  $dev_ensure   = $global::params::make_dev_ensure,
-  $user         = $global::params::make_user,
-  $group        = $global::params::make_group,
-  $options      = $global::params::make_options,
+  $packages        = [],
+  $package_ensure  = 'present',
+  $repo_path       = '',
+  $repo_provider   = 'git',
+  $repo_ensure     = 'latest',
+  $repo_source     = undef,
+  $repo_revision   = undef,
+  $config_options  = '',
+  $make_options    = '',
+  $install_options = '',
+  $user            = $global::params::exec_user,
+  $group           = $global::params::exec_group,
+  $notify          = undef
 
 ) {
 
-  include git
+  $base_name        = "global-make-${name}"
+  $config_base_name = "global::make::${name}"
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  package { "${name}-dev":
-    name    => $dev_packages,
-    ensure  => $dev_ensure,
-    require => Package['build-packages'],
+  global::packages { $base_name:
+    resources => {
+      "${base_name}" => {
+        name    => $packages,
+        ensure  => $package_ensure
+      }
+    },
+    overrides => "${config_base_name}::packages",
+    require   => Global::Packages['global']
   }
 
   #---
 
-  git::repo { $repo:
-    home          => '',
-    source        => $source,
-    revision      => $revision,
-    user          => $user,
-    group         => $group,
-    require       => Package["${name}-dev"],
-    update_notify => Exec["configure-${name}"],
+  global::repos { $base_name:
+    resources => {
+      "${base_name}" => {
+        path     => $repo_path,
+        source   => $repo_source,
+        revision => $repo_revision,
+        notify   => Exec["${base_name}-configure"]
+      }
+    },
+    defaults  => {
+      ensure   => $repo_ensure,
+      provider => $provider,
+      owner    => $user,
+      group    => $group
+    },
+    overrides => "${config_base_name}::repos",
+    require   => Global::Packages[$base_name]
   }
 
-  Exec {
-    cwd  => $repo,
-    user => $user,
-    path => [ '/bin', '/usr/bin', '/usr/local/bin' ],
-  }
+  #---
 
-  exec {
-    "configure-${name}":
-      command     => "${repo}/configure ${options}",
-      refreshonly => true;
-
-    "make-${name}":
-      command     => 'make',
-      refreshonly => true,
-      subscribe   => Exec["configure-${name}"];
-
-    "make-install-${name}":
-      command     => 'make install',
-      refreshonly => true,
-      subscribe   => Exec["make-${name}"];
+  global::exec { $base_name:
+    resources => {
+      "${base_name}-configure" => {
+        command => "./configure ${config_options}"
+      },
+      "${base_name}-make" => {
+        command   => "make ${make_options}",
+        subscribe => "${base_name}-configure"
+      },
+      "${base_name}-make-install" => {
+        command   => "make install ${install_options}",
+        subscribe => "${base_name}-make",
+        notify    => $notify
+      }
+    },
+    defaults  => {
+      cwd         => $repo_path,
+      refreshonly => true
+    },
+    overrides => "${config_base_name}::exec",
+    require   => Global::Repos[$base_name]
   }
 }

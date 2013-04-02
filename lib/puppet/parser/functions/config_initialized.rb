@@ -7,7 +7,7 @@ module Puppet::Parser::Functions
   newfunction(:config_initialized, :type => :rvalue, :doc => <<-EOS
 This function checks if Hiera is fully configured and ready to query.
     EOS
-) do ||
+) do |args|
 
     Puppet::Parser::Functions.autoloader.loadall
 

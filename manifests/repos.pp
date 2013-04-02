@@ -3,7 +3,8 @@ define coral::repos (
 
   $resources = {},
   $overrides = {},
-  $defaults  = {}
+  $defaults  = {},
+  $tag       = 'coral'
 
 ) {
 
@@ -22,6 +23,6 @@ define coral::repos (
   }
 
   $data = flatten([ $resources, $override_data ])
-  coral_resources('@vcsrepo', $data, $default_data, 'coral')
-  Vcsrepo<| tag == 'coral' |>
+  coral_resources('@vcsrepo', $data, $default_data, $tag)
+  Vcsrepo<| tag == $tag |>
 }

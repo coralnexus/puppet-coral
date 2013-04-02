@@ -3,7 +3,8 @@ define coral::firewall (
 
   $resources = {},
   $overrides = {},
-  $defaults  = {}
+  $defaults  = {},
+  $tag       = 'coral'
 
 ) {
 
@@ -22,6 +23,6 @@ define coral::firewall (
   }
 
   $data = flatten([ $resources, $override_data ])
-  coral_resources('@firewall', $data, $default_data, 'coral')
-  Firewall<| tag == 'coral' |>
+  coral_resources('@firewall', $data, $default_data, $tag)
+  Firewall<| tag == $tag |>
 }

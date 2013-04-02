@@ -1,5 +1,5 @@
 
-define global::repos (
+define coral::repos (
 
   $resources = {},
   $overrides = {},
@@ -14,7 +14,14 @@ define global::repos (
     $override_data = "${name}::repos"
   }
 
-  $data      = flatten([ $resources, $override_data ])
-  $resources = global_resources('@vcsrepo', $data, $defaults)
-  realize Vcsrepo[$resources]
+  if ! empty($defaults) {
+    $default_data = $defaults
+  }
+  else {
+    $default_data = "${name}::repo_defaults"
+  }
+
+  $data = flatten([ $resources, $override_data ])
+  coral_resources('@vcsrepo', $data, $default_data, 'coral')
+  Vcsrepo<| tag == 'coral' |>
 }

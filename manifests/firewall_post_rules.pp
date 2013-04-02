@@ -1,6 +1,6 @@
 
-class global::firewall_post_rules {
-  global::firewall { 'global-firewall-post-rules':
+class coral::firewall_post_rules {
+  coral::firewall { 'coral-firewall-post-rules':
     resources => {
       'log-rejected' => {
         name   => '950 INPUT log all rejected',
@@ -14,7 +14,7 @@ class global::firewall_post_rules {
         action => 'reject'
       }
     },
-    defaults  => { before => undef },
-    overrides => 'global::firewall_post'
+    defaults  => [ { before => undef }, 'coral::firewall_post_defaults' ],
+    overrides => 'coral::firewall_post_rules'
   }
 }

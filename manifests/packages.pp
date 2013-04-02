@@ -1,5 +1,5 @@
 
-define global::packages (
+define coral::packages (
 
   $resources = {},
   $overrides = {},
@@ -14,7 +14,14 @@ define global::packages (
     $override_data = "${name}::packages"
   }
 
-  $data      = flatten([ $resources, $override_data ])
-  $resources = global_resources('@package', $data, $defaults)
-  realize Package[$resources]
+  if ! empty($defaults) {
+    $default_data = $defaults
+  }
+  else {
+    $default_data = "${name}::package_defaults"
+  }
+
+  $data = flatten([ $resources, $override_data ])
+  coral_resources('@package', $data, $default_data, 'coral')
+  Package<| tag == 'coral' |>
 }

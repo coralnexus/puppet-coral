@@ -1,5 +1,5 @@
 
-class global::setup (
+class coral::setup (
 
   $packages = [],
   $ensure   = 'present'
@@ -9,13 +9,13 @@ class global::setup (
   #-----------------------------------------------------------------------------
   # Installation
 
-  global::packages { 'global-setup':
+  coral::packages { 'coral-setup':
     resources => {
-      'global-setup-packages' => {
+      'coral-setup-packages' => {
         name => $packages
       }
     },
-    overrides => 'global::setup_packages',
-    defaults  => { ensure => $ensure }
+    overrides => 'coral::setup_packages',
+    defaults  => [ { ensure => $ensure }, 'coral::setup_package_defaults' ]
   }
 }

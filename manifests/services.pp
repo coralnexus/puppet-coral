@@ -1,5 +1,5 @@
 
-define global::services (
+define coral::services (
 
   $resources = {},
   $overrides = {},
@@ -14,7 +14,14 @@ define global::services (
     $override_data = "${name}::services"
   }
 
-  $data      = flatten([ $resources, $override_data ])
-  $resources = global_resources('@service', $data, $defaults)
-  realize Service[$resources]
+  if ! empty($defaults) {
+    $default_data = $defaults
+  }
+  else {
+    $default_data = "${name}::service_defaults"
+  }
+
+  $data = flatten([ $resources, $override_data ])
+  coral_resources('@service', $data, $default_data, 'coral')
+  Service<| tag == 'coral' |>
 }

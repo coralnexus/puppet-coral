@@ -1,10 +1,9 @@
 
-class global::params {
+class coral::params {
 
-  $setup_ensure   = 'present'
-  $build_ensure   = 'present'
-  $common_ensure  = 'present'
-  $runtime_ensure = 'present'
+  $package_ensure = 'present'
+
+  $auto_translate = true
 
   $facts          = {}
 
@@ -26,9 +25,9 @@ class global::params {
       $apt_purge_sources_list_d = false
       $apt_purge_preferences_d  = false
 
-      $setup_packages           = []
-      $common_packages          = [ 'vim', 'unzip', 'curl' ]
-      $build_packages           = [
+      $setup_package_names      = []
+      $common_package_names     = [ 'vim', 'unzip', 'curl' ]
+      $build_package_names      = [
         'build-essential',
         'libnl-dev',
         'libpopt-dev',
@@ -36,13 +35,15 @@ class global::params {
         'libssl-dev',
         'libcurl4-openssl-dev',
       ]
-      $runtime_packages         = []
+      $runtime_package_names    = []
 
       $fact_environment         = '/etc/profile.d/facts.sh'
-      $facts_template           = 'global/facts.sh.erb'
+      $facts_template           = 'coral/facts.sh.erb'
     }
     default: {
-      fail("The global module is not currently supported on ${::operatingsystem}")
+      $exec_path  = [ '/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin' ]
+      $exec_user  = 'root'
+      $exec_group = 'root'
     }
   }
 }

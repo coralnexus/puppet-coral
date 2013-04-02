@@ -1,13 +1,17 @@
-# Class: global
+# Class: coral
+#
+#   General purpose Puppet framework that focuses on extensibility and
+#   compatibility between 2.x / 3.x and Hiera / non-Hiera systems.
 #
 #   This module provides a core framework for building and utilizing other
 #   Puppet modules.  It also installs misc packages and utilities that do not
 #   fit neatly into specialized bundles and creates and manages custom Facter
-#   facts that are loaded through the user environment.
+#   facts that are loaded through the user environment.  Finally it manages the
+#   general security procedures and tools on a server, among the most important
+#   functions are creating an extensible firewall rule system and a locked down
+#   default.
 #
-#   This module manages the general security procedures and tools on a server.
-#   Among the most important functions are creating an extensible firewall rule
-#   system and a locked down default.
+#   TODO: Configuration template engine
 #
 #
 #   Adrian Webb <adrian.webb@coraltech.net>
@@ -41,40 +45,45 @@
 #     purge => true
 #   }
 #   Firewall {
-#     before  => Class['global::firewall_post_rules'],
-#     require => Class['global::firewall_pre_rules'],
+#     before  => Class['coral::firewall_post_rules'],
+#     require => Class['coral::firewall_pre_rules'],
 #   }
-#   class { 'global':
-#     facts => global_hash('global::facts')
-#   }
+#   include coral
 #   Exec {
-#     user => global_param('global::exec_user'),
-#     path => global_param('global::exec_path'),
+#     user => global_param('coral::exec_user'),
+#     path => global_param('coral::exec_path'),
 #   }
 #
-class global (
+class coral (
 
-  $setup_packages           = $global::params::setup_packages,
-  $build_packages           = $global::params::build_packages,
-  $common_packages          = $global::params::common_packages,
-  $runtime_packages         = $global::params::runtime_packages,
-  $package_ensure           = $global::params::runtime_ensure,
-  $fact_environment         = $global::params::fact_environment,
-  $facts_template           = $global::params::facts_template,
-  $facts                    = $global::params::facts,
-  $allow_icmp               = $global::params::allow_icmp,
-  $apt_always_apt_update    = $global::params::apt_always_apt_update,
-  $apt_disable_keys         = $global::params::apt_disable_keys,
-  $apt_proxy_host           = $global::params::apt_proxy_host,
-  $apt_proxy_port           = $global::params::apt_proxy_port,
-  $apt_purge_sources_list   = $global::params::apt_purge_sources_list,
-  $apt_purge_sources_list_d = $global::params::apt_purge_sources_list_d,
-  $apt_purge_preferences_d  = $global::params::apt_purge_preferences_d
+  $setup_package_names      = $coral::params::setup_package_names,
+  $build_package_names      = $coral::params::build_package_names,
+  $common_package_names     = $coral::params::common_package_names,
+  $runtime_package_names    = $coral::params::runtime_package_names,
+  $package_ensure           = $coral::params::package_ensure,
+  $auto_translate           = $coral::params::auto_translate,
+  $fact_environment         = $coral::params::fact_environment,
+  $facts_template           = $coral::params::facts_template,
+  $allow_icmp               = $coral::params::allow_icmp,
+  $apt_always_apt_update    = $coral::params::apt_always_apt_update,
+  $apt_disable_keys         = $coral::params::apt_disable_keys,
+  $apt_proxy_host           = $coral::params::apt_proxy_host,
+  $apt_proxy_port           = $coral::params::apt_proxy_port,
+  $apt_purge_sources_list   = $coral::params::apt_purge_sources_list,
+  $apt_purge_sources_list_d = $coral::params::apt_purge_sources_list_d,
+  $apt_purge_preferences_d  = $coral::params::apt_purge_preferences_d
 
-) inherits global::params {
+) inherits coral::params {
+
+  if is_true($auto_translate) {
+    coral_auto_translate()
+  }
 
   include stdlib
   include firewall
+
+  $base_name = 'coral'
+  $facts     = render(normalize($coral::params::facts, module_hash('facts')))
 
   #-----------------------------------------------------------------------------
   # Installation
@@ -82,43 +91,46 @@ class global (
   case $::operatingsystem {
     debian, ubuntu: {
       class { 'apt':
-        always_apt_update    => $apt_always_apt_update,
-        disable_keys         => $apt_disable_keys,
-        proxy_host           => $apt_proxy_host,
-        proxy_port           => $apt_proxy_port,
-        purge_sources_list   => $apt_purge_sources_list,
-        purge_sources_list_d => $apt_purge_sources_list_d,
-        purge_preferences_d  => $apt_purge_preferences_d,
+        always_apt_update    => value($apt_always_apt_update),
+        disable_keys         => value($apt_disable_keys),
+        proxy_host           => value($apt_proxy_host),
+        proxy_port           => value($apt_proxy_port),
+        purge_sources_list   => value($apt_purge_sources_list),
+        purge_sources_list_d => value($apt_purge_sources_list_d),
+        purge_preferences_d  => value($apt_purge_preferences_d),
       }
     }
   }
 
-  class { 'global::setup':
-    packages => $setup_packages,
+  class { "coral::setup":
+    packages => $setup_package_names,
     ensure   => $package_ensure,
     stage    => 'setup',
   }
 
-  global::packages { 'global':
+  coral::packages { $base_name:
     resources => {
       'build-packages' => {
-        name => $build_packages
+        name => $build_package_names
       },
       'common-packages' => {
-        name    => $common_packages,
+        name    => $common_package_names,
         require => 'build-packages'
       }
     },
-    overrides => 'global::main_packages',
-    defaults  => { ensure => $package_ensure }
+    overrides => "${base_name}::main_packages",
+    defaults  => [
+      { ensure => $package_ensure },
+      "${base_name}::main_package_defaults"
+    ]
   }
 
   if (defined(Class['apt'])) {
-    Class['apt'] -> Global::Packages['global']
+    Class['apt'] -> Coral::Packages[$base_name]
   }
 
-  class { 'global::runtime':
-    packages => $runtime_packages,
+  class { 'coral::runtime':
+    packages => $runtime_package_names,
     ensure   => $package_ensure,
     stage    => 'runtime',
   }
@@ -126,21 +138,24 @@ class global (
   #-----------------------------------------------------------------------------
   # Configuration
 
-  global::files { 'global':
+  coral::files { $base_name:
     resources => {
       'fact-environment' => {
         path    => $fact_environment,
         content => template($facts_template)
       }
     },
-    require => Global::Packages['global']
+    require => Coral::Packages[$base_name]
   }
 
-  # These are added to the Firewall execution flow in site.pp
-  include global::firewall_pre_rules
-  include global::firewall_post_rules
+  coral::repos { $base_name: }
+  Coral::Files[$base_name] -> Coral::Repos[$base_name]
 
-  global::firewall { 'global':
+  # These are added to the Firewall execution flow in site.pp
+  include coral::firewall_pre_rules
+  include coral::firewall_post_rules
+
+  coral::firewall { $base_name:
     resources => {
       'icmp' => {
         name   => $allow_icmp ? { true => '101 INPUT allow ICMP', default => '' },
@@ -152,12 +167,22 @@ class global (
   }
 
   #-----------------------------------------------------------------------------
-  # Dynamic resources
+  # Actions
 
-  global_resources('global::make')
+  coral::exec { $base_name: }
+  Coral::Repos[$base_name] -> Coral::Exec[$base_name]
 
-  #---
+  #-----------------------------------------------------------------------------
+  # Services
 
-  global_resources('@vcsrepo', 'global::repos', { tag => global })
-  Global::Files['global'] -> Vcsrepo<| tag == global |>
+  coral::services { $base_name: }
+  Coral::Exec[$base_name] -> Coral::Services[$base_name]
+
+  coral::cron { $base_name: }
+  Coral::Services[$base_name] -> Coral::Cron[$base_name]
+
+  #-----------------------------------------------------------------------------
+  # Resources
+
+  coral_resources('coral::make', "${base_name}::make", "${base_name}::make_defaults")
 }

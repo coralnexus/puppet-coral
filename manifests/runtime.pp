@@ -1,5 +1,5 @@
 
-class global::runtime (
+class coral::runtime (
 
   $packages = [],
   $ensure   = 'present',
@@ -9,13 +9,13 @@ class global::runtime (
   #-----------------------------------------------------------------------------
   # Installation
 
-  global::packages { 'global-runtime':
+  coral::packages { 'coral-runtime':
     resources => {
-      'global-runtime-packages' => {
+      'coral-runtime-packages' => {
         name => $packages
       }
     },
-    overrides => 'global::runtime_packages',
-    defaults  => { ensure => $ensure }
+    overrides => 'coral::runtime_packages',
+    defaults  => [ { ensure => $ensure }, 'coral::runtime_package_defaults' ]
   }
 }

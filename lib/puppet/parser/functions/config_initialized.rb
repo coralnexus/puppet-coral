@@ -9,8 +9,6 @@ This function checks if Hiera is fully configured and ready to query.
     EOS
 ) do |args|
 
-    Puppet::Parser::Functions.autoloader.loadall
-
     begin
       if Puppet::Parser::Functions.function('hiera') && lookupvar("::hiera_ready") == 'true'
         return true

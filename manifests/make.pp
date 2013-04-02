@@ -1,5 +1,5 @@
 
-define global::make (
+define coral::make (
 
   $packages        = [],
   $package_ensure  = 'present',
@@ -11,32 +11,33 @@ define global::make (
   $config_options  = '',
   $make_options    = '',
   $install_options = '',
-  $user            = $global::params::exec_user,
-  $group           = $global::params::exec_group,
+  $user            = $coral::params::exec_user,
+  $group           = $coral::params::exec_group,
   $notify          = undef
 
 ) {
 
-  $base_name        = "global-make-${name}"
-  $config_base_name = "global::make::${name}"
+  $base_name        = "coral-make-${name}"
+  $config_base_name = "coral::make::${name}"
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  global::packages { $base_name:
+  coral::packages { $base_name:
     resources => {
       "${base_name}" => {
         name    => $packages,
         ensure  => $package_ensure
       }
     },
+    defaults  => "${config_base_name}::package_defaults",
     overrides => "${config_base_name}::packages",
-    require   => Global::Packages['global']
+    require   => Coral::Packages['coral']
   }
 
   #---
 
-  global::repos { $base_name:
+  coral::repos { $base_name:
     resources => {
       "${base_name}" => {
         path     => $repo_path,
@@ -45,19 +46,21 @@ define global::make (
         notify   => Exec["${base_name}-configure"]
       }
     },
-    defaults  => {
-      ensure   => $repo_ensure,
-      provider => $provider,
-      owner    => $user,
-      group    => $group
-    },
+    defaults  => [ {
+        ensure   => $repo_ensure,
+        provider => $provider,
+        owner    => $user,
+        group    => $group
+      },
+      "${config_base_name}::repo_defaults"
+    ],
     overrides => "${config_base_name}::repos",
-    require   => Global::Packages[$base_name]
+    require   => Coral::Packages[$base_name]
   }
 
   #---
 
-  global::exec { $base_name:
+  coral::exec { $base_name:
     resources => {
       "${base_name}-configure" => {
         command => "./configure ${config_options}"
@@ -72,11 +75,13 @@ define global::make (
         notify    => $notify
       }
     },
-    defaults  => {
-      cwd         => $repo_path,
-      refreshonly => true
-    },
+    defaults  => [ {
+        cwd         => $repo_path,
+        refreshonly => true
+      },
+      "${config_base_name}::exec_defaults"
+    ],
     overrides => "${config_base_name}::exec",
-    require   => Global::Repos[$base_name]
+    require   => Coral::Repos[$base_name]
   }
 }

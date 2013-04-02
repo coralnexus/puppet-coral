@@ -1,5 +1,5 @@
 
-define global::files (
+define coral::files (
 
   $resources = {},
   $overrides = {},
@@ -14,7 +14,14 @@ define global::files (
     $override_data = "${name}::files"
   }
 
-  $data      = flatten([ $resources, $override_data ])
-  $resources = global_resources('@file', $data, $defaults)
-  realize File[$resources]
+  if ! empty($defaults) {
+    $default_data = $defaults
+  }
+  else {
+    $default_data = "${name}::file_defaults"
+  }
+
+  $data = flatten([ $resources, $override_data ])
+  coral_resources('@file', $data, $default_data, 'coral')
+  File<| tag == 'coral' |>
 }

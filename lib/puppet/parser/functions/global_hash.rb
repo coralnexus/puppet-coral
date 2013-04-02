@@ -14,6 +14,6 @@ If no value is found in the defined sources, it returns an empty hash ({})
     raise(Puppet::ParseError, "global_hash(): Define at least the variable name " +
       "given (#{args.size} for 1)") if args.size < 1
 
-    return function_global_param([ args[0], args[1], 'hash' ])
+    return function_global_param([ args[0], args[1], 'hash', args[2] ])
   end
 end

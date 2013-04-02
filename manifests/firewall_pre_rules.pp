@@ -1,6 +1,6 @@
 
-class global::firewall_pre_rules {
-  global::firewall { 'global-firewall-pre-rules':
+class coral::firewall_pre_rules {
+  coral::firewall { 'coral-firewall-pre-rules':
     resources => {
       'loopback-input' => {
         name    => '001 INPUT allow loopbacks',
@@ -25,7 +25,7 @@ class global::firewall_pre_rules {
         action => 'accept'
       }
     },
-    defaults  => { require => undef },
-    overrides => 'global::firewall_pre'
+    defaults  => [ { require => undef }, 'coral::firewall_pre_defaults' ],
+    overrides => 'coral::firewall_pre_rules'
   }
 }

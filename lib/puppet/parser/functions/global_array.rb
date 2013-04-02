@@ -14,6 +14,6 @@ If no value is found in the defined sources, it returns an empty string ('')
     raise(Puppet::ParseError, "global_array(): Define at least the variable name " +
       "given (#{args.size} for 1)") if args.size < 1
       
-    return function_global_param([ args[0], args[1], 'array' ])
+    return function_global_param([ args[0], args[1], 'array', args[2] ])
   end
 end

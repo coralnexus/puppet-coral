@@ -1,5 +1,5 @@
 
-define global::cron (
+define coral::cron (
 
   $resources = {},
   $overrides = {},
@@ -14,7 +14,14 @@ define global::cron (
     $override_data = "${name}::cron"
   }
 
-  $data      = flatten([ $resources, $override_data ])
-  $resources = global_resources('@cron', $data, $defaults)
-  realize Cron[$resources]
+  if ! empty($defaults) {
+    $default_data = $defaults
+  }
+  else {
+    $default_data = "${name}::cron_defaults"
+  }
+
+  $data = flatten([ $resources, $override_data ])
+  coral_resources('@cron', $data, $default_data, 'coral')
+  Cron<| tag == 'coral' |>
 }

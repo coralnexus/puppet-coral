@@ -1,5 +1,5 @@
 
-define global::firewall (
+define coral::firewall (
 
   $resources = {},
   $overrides = {},
@@ -14,7 +14,14 @@ define global::firewall (
     $override_data = "${name}::firewall"
   }
 
-  $data      = flatten([ $resources, $override_data ])
-  $resources = global_resources('@firewall', $data, $defaults)
-  realize Firewall[$resources]
+  if ! empty($defaults) {
+    $default_data = $defaults
+  }
+  else {
+    $default_data = "${name}::firewall_defaults"
+  }
+
+  $data = flatten([ $resources, $override_data ])
+  coral_resources('@firewall', $data, $default_data, 'coral')
+  Firewall<| tag == 'coral' |>
 }

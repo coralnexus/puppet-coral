@@ -19,9 +19,9 @@ This function Merges multiple hashes together recursively.
         if hash.is_a?(Hash)
           begin
             require 'deep_merge'
-            value.deep_merge!(hash)        
+            value = value.deep_merge!(hash)        
           rescue LoadError
-            value.merge(hash)
+            value = value.merge(hash)
           end
         end
       end

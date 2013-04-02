@@ -4,11 +4,13 @@
 # This function performs a lookup for a variable value in various locations
 # following this order
 # - Hiera backend, if present (modulename prefix)
-# - ::data::default::{modulename}::{varname}
+# - ::coral::default::{modulename}::{varname}
 # - {default parameter}
 #
-# Inspired by example42 -> params_lookup.rb
+# Inspired by example42 -> params_lookup.rb (in the Puppi module)
 #
+require 'pp'
+
 module Puppet::Parser::Functions
   newfunction(:module_param, :type => :rvalue, :doc => <<-EOS
 This function performs a lookup for a variable value in various locations following this order:
@@ -22,14 +24,11 @@ If no value is found in the defined sources, it returns an empty string ('')
     raise(Puppet::ParseError, "module_param(): Define at least the variable name " +
       "given (#{args.size} for 1)") if args.size < 1
       
-    Puppet.send(:debug, "module_param")
-      
-    #Puppet::Parser::Functions.autoloader.loadall
-
     value          = ''
     var_name       = args[0]
     default_value  = ( args[1] ? args[1] : '' )
     context        = ( args[2] ? args[2] : '' )
+    base           = ( args[3] ? args[3] : '::coral::default' )
     
     module_name    = parent_module_name
     hiera_property = "#{module_name}::#{var_name}"
@@ -45,10 +44,15 @@ If no value is found in the defined sources, it returns an empty string ('')
       end
     end
     
+    puts "module_param -> #{hiera_property}"
+    #pp value
+    #pp lookupvar("#{base}::#{hiera_property}")
+    #pp default_value
     
+    value = lookupvar("#{base}::#{hiera_property}") if value == :undefined || value == ''
+    value = default_value if value == :undefined || value == ''
     
-    value = lookupvar("::data::default::#{hiera_property}") if (value == :undefined || value == '')
-    value = default_value if ( value == :undefined || value == '' )
+    pp value 
     return value
   end
 end

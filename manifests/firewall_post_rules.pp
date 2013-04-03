@@ -1,20 +1,19 @@
 
 class coral::firewall_post_rules {
-  coral::firewall { 'coral-firewall-post-rules':
+  coral::firewall { coral_exit:
     resources => {
-      'log-rejected' => {
+      log_rejected => {
         name   => '950 INPUT log all rejected',
         chain  => 'INPUT',
         jump   => 'LOG',
         limit  => '5/min'
       },
-      'reject-all' => {
+      reject_all => {
         name   => '999 Reject all',
         chain  => ['INPUT', 'FORWARD'],
         action => 'reject'
       }
     },
-    defaults  => [ { before => undef }, 'coral::firewall_post_defaults' ],
-    overrides => 'coral::firewall_post_rules'
+    defaults => { before => undef }
   }
 }

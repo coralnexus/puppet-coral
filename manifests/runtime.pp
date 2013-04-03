@@ -9,13 +9,12 @@ class coral::runtime (
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::packages { 'coral-runtime':
+  coral::packages { coral_runtime:
     resources => {
-      'coral-runtime-packages' => {
+      all => {
         name => $packages
       }
     },
-    overrides => 'coral::runtime_packages',
-    defaults  => [ { ensure => $ensure }, 'coral::runtime_package_defaults' ]
+    defaults => { ensure => $ensure }
   }
 }

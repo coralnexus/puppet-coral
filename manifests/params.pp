@@ -26,7 +26,6 @@ class coral::params {
       $apt_purge_preferences_d  = false
 
       $setup_package_names      = []
-      $common_package_names     = [ 'vim', 'unzip', 'curl' ]
       $build_package_names      = [
         'build-essential',
         'libnl-dev',
@@ -35,6 +34,8 @@ class coral::params {
         'libssl-dev',
         'libcurl4-openssl-dev',
       ]
+      $common_package_names     = [ 'vim', 'unzip', 'curl' ]
+      $extra_package_names      = []
       $runtime_package_names    = []
 
       $fact_environment         = '/etc/profile.d/facts.sh'

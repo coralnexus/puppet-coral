@@ -56,10 +56,6 @@
 #
 class coral (
 
-  $setup_package_names      = $coral::params::setup_package_names,
-  $build_package_names      = $coral::params::build_package_names,
-  $common_package_names     = $coral::params::common_package_names,
-  $runtime_package_names    = $coral::params::runtime_package_names,
   $package_ensure           = $coral::params::package_ensure,
   $auto_translate           = $coral::params::auto_translate,
   $fact_environment         = $coral::params::fact_environment,
@@ -83,14 +79,36 @@ class coral (
   include firewall
 
   $base_name = 'coral'
-  $facts     = render(normalize($coral::params::facts, module_hash('facts')))
 
   #-----------------------------------------------------------------------------
   # Installation
 
+  $setup_package_names = normalize(
+    $coral::params::setup_package_names,
+    module_array('setup_package_names')
+  )
+  $build_package_names = normalize(
+    $coral::params::build_package_names,
+    module_array('build_package_names')
+  )
+  $common_package_names = normalize(
+    $coral::params::common_package_names,
+    module_array('common_package_names')
+  )
+  $extra_package_names = normalize(
+    $coral::params::extra_package_names,
+    module_array('extra_package_names')
+  )
+  $runtime_package_names = normalize(
+    $coral::params::runtime_package_names,
+    module_array('runtime_package_names')
+  )
+
+  #---
+
   case $::operatingsystem {
     debian, ubuntu: {
-      class { 'apt':
+      class { apt:
         always_apt_update    => value($apt_always_apt_update),
         disable_keys         => value($apt_disable_keys),
         proxy_host           => value($apt_proxy_host),
@@ -99,6 +117,7 @@ class coral (
         purge_sources_list_d => value($apt_purge_sources_list_d),
         purge_preferences_d  => value($apt_purge_preferences_d),
       }
+      Class['apt'] -> Coral::Packages[$base_name]
     }
   }
 
@@ -110,23 +129,19 @@ class coral (
 
   coral::packages { $base_name:
     resources => {
-      'build-packages' => {
+      build_packages => {
         name => $build_package_names
       },
-      'common-packages' => {
+      common_packages => {
         name    => $common_package_names,
-        require => 'build-packages'
+        require => 'build_packages'
+      },
+      extra_packages => {
+        name    => $extra_package_names,
+        require => 'common_packages'
       }
     },
-    overrides => "${base_name}::main_packages",
-    defaults  => [
-      { ensure => $package_ensure },
-      "${base_name}::main_package_defaults"
-    ]
-  }
-
-  if (defined(Class['apt'])) {
-    Class['apt'] -> Coral::Packages[$base_name]
+    defaults => { ensure => $package_ensure }
   }
 
   class { 'coral::runtime':
@@ -138,9 +153,13 @@ class coral (
   #-----------------------------------------------------------------------------
   # Configuration
 
+  $facts = render(normalize($coral::params::facts, module_hash('facts')))
+
+  #---
+
   coral::files { $base_name:
     resources => {
-      'fact-environment' => {
+      fact_environment => {
         path    => $fact_environment,
         content => template($facts_template)
       }
@@ -148,8 +167,9 @@ class coral (
     require => Coral::Packages[$base_name]
   }
 
-  coral::repos { $base_name: }
-  Coral::Files[$base_name] -> Coral::Repos[$base_name]
+  coral::repos { $base_name:
+    resources => {}
+  }
 
   # These are added to the Firewall execution flow in site.pp
   include coral::firewall_pre_rules
@@ -157,7 +177,7 @@ class coral (
 
   coral::firewall { $base_name:
     resources => {
-      'icmp' => {
+      icmp => {
         name   => $allow_icmp ? { true => '101 INPUT allow ICMP', default => '' },
         icmp   => '8',
         proto  => 'icmp',
@@ -169,17 +189,22 @@ class coral (
   #-----------------------------------------------------------------------------
   # Actions
 
-  coral::exec { $base_name: }
-  Coral::Repos[$base_name] -> Coral::Exec[$base_name]
+  coral::exec { $base_name:
+    resources => {}
+  }
 
   #-----------------------------------------------------------------------------
   # Services
 
-  coral::services { $base_name: }
-  Coral::Exec[$base_name] -> Coral::Services[$base_name]
+  coral::services { $base_name:
+    resources => {},
+    require   => Coral::Repos[$base_name]
+  }
 
-  coral::cron { $base_name: }
-  Coral::Services[$base_name] -> Coral::Cron[$base_name]
+  coral::cron { $base_name:
+    resources => {},
+    require   => Coral::Services[$base_name]
+  }
 
   #-----------------------------------------------------------------------------
   # Resources

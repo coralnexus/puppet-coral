@@ -9,13 +9,12 @@ class coral::setup (
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::packages { 'coral-setup':
+  coral::packages { coral_init:
     resources => {
-      'coral-setup-packages' => {
+      all => {
         name => $packages
       }
     },
-    overrides => 'coral::setup_packages',
-    defaults  => [ { ensure => $ensure }, 'coral::setup_package_defaults' ]
+    defaults => { ensure => $ensure }
   }
 }

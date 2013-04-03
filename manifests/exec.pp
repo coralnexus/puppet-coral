@@ -6,22 +6,7 @@ define coral::exec (
   $defaults  = {}
 
 ) {
-
-  if ! empty($overrides) {
-    $override_data = $overrides
-  }
-  else {
-    $override_data = "${name}::exec"
-  }
-
-  if ! empty($defaults) {
-    $default_data = $defaults
-  }
-  else {
-    $default_data = "${name}::exec_defaults"
-  }
-
-  $data = flatten([ $resources, $override_data ])
-  coral_resources('@exec', $data, $default_data, $name)
+  $data = flatten([ $resources, $overrides ])
+  coral_resources('@exec', $data, $defaults, $name)
   Exec<| tag == $name |>
 }

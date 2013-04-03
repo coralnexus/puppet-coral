@@ -6,22 +6,7 @@ define coral::cron (
   $defaults  = {}
 
 ) {
-
-  if ! empty($overrides) {
-    $override_data = $overrides
-  }
-  else {
-    $override_data = "${name}::cron"
-  }
-
-  if ! empty($defaults) {
-    $default_data = $defaults
-  }
-  else {
-    $default_data = "${name}::cron_defaults"
-  }
-
-  $data = flatten([ $resources, $override_data ])
-  coral_resources('@cron', $data, $default_data, $name)
+  $data = flatten([ $resources, $overrides ])
+  coral_resources('@cron', $data, $defaults, $name)
   Cron<| tag == $name |>
 }

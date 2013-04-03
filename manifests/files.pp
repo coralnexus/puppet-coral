@@ -6,22 +6,7 @@ define coral::files (
   $defaults  = {}
 
 ) {
-
-  if ! empty($overrides) {
-    $override_data = $overrides
-  }
-  else {
-    $override_data = "${name}::files"
-  }
-
-  if ! empty($defaults) {
-    $default_data = $defaults
-  }
-  else {
-    $default_data = "${name}::file_defaults"
-  }
-
-  $data = flatten([ $resources, $override_data ])
-  coral_resources('@file', $data, $default_data, $name)
+  $data = flatten([ $resources, $overrides ])
+  coral_resources('@file', $data, $defaults, $name)
   File<| tag == $name |>
 }

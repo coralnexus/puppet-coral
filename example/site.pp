@@ -14,7 +14,8 @@ node default {
 
   #---
 
-  # This assumes the manifest core has been added to the core directory.
+  # This assumes the manifest core has been added to the {project dir}/core
+  # directory.
   import "core/*.pp"
   include coral::default
 

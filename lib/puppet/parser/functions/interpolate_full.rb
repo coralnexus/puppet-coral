@@ -23,7 +23,7 @@ This function interpolates values from one hash to all values of another for con
           dest[name] = function_interpolate_full([ data, source, pattern, flags ])
           
         elsif data.is_a?(String)
-          dest[name] = function_interpolate(data, source, pattern, flags)
+          dest[name] = function_interpolate([ data, source, pattern, flags ])
         end
       end
     end

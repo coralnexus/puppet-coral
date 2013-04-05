@@ -64,8 +64,8 @@ class coral (
 
   $package_ensure           = $coral::params::package_ensure,
   $auto_translate           = $coral::params::auto_translate,
-  $fact_environment         = $coral::params::fact_environment,
-  $facts_template           = $coral::params::facts_template,
+  $fact_env_file            = $coral::params::fact_env_file,
+  $fact_template_class      = $coral::params::fact_template_class,
   $allow_icmp               = $coral::params::allow_icmp,
   $apt_always_apt_update    = $coral::params::apt_always_apt_update,
   $apt_disable_keys         = $coral::params::apt_disable_keys,
@@ -76,10 +76,7 @@ class coral (
   $apt_purge_preferences_d  = $coral::params::apt_purge_preferences_d
 
 ) inherits coral::params {
-
-  if is_true($auto_translate) {
-    coral_auto_translate()
-  }
+  coral_initialize($auto_translate)
 
   include stdlib
   include firewall
@@ -159,15 +156,14 @@ class coral (
   #-----------------------------------------------------------------------------
   # Configuration
 
-  $facts = render(normalize($coral::params::facts, module_hash('facts')))
-
-  #---
-
   coral::files { $base_name:
     resources => {
-      fact_environment => {
-        path    => $fact_environment,
-        content => template($facts_template)
+      fact_env => {
+        path    => $fact_env_file,
+        content => render($fact_template_class,
+          [ $coral::params::facts, module_hash('facts') ],
+          { name_prefix => 'FACTER' }
+        )
       }
     },
     require => Coral::Packages[$base_name]

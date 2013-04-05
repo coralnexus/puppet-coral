@@ -38,8 +38,8 @@ class coral::params {
       $extra_package_names      = []
       $runtime_package_names    = []
 
-      $fact_environment         = '/etc/profile.d/facts.sh'
-      $facts_template           = 'coral/facts.sh.erb'
+      $fact_env_file            = '/etc/profile.d/facts.sh'
+      $fact_template_class      = 'Environment'
     }
     default: {
       $exec_path  = [ '/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin' ]

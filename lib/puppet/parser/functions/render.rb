@@ -9,35 +9,17 @@ This function returns the string-ified form of a given value.
     EOS
 ) do |args|
 
-    raise(Puppet::ParseError, "render(): Must have a source value specified; " +
-      "given (#{args.size} for 1)") if args.size < 1
-      
-    value = args.shift
+    raise(Puppet::ParseError, "render(): Must have a template class name and a source value specified; " +
+      "given (#{args.size} for 2)") if args.size < 2
     
-    if ! value.is_a?(String)
-      if value == true
-        value = 'true'
-      elsif value == false
-        value = 'false'
-      elsif value == :undef || value.nil?
-        value = 'undef'
-      end
-      
-      case value
-      when Array
-        results = []
-        value.each do |data|
-          results << function_render([ data ])
-        end
-        value = results
+    class_name = args[0]  
+    data       = args[1]
+    options    = ( args[2] ? args[2] : {} )
     
-      when Hash
-        value.each do |key, data|
-          value[key] = function_render([ data ])
-        end
-      end
-    end
-    
-    return value
+    config = Coral::Config.new(options, {
+      :scope  => self,
+      :search => 'coral::default'  
+    })
+    return Coral::Template.render(class_name, data, config)
   end
 end

@@ -12,12 +12,6 @@ This function checks whether a given value is false.
     raise(Puppet::ParseError, "is_false(): Must have a value to check; " +
       "given (#{args.size} for 1)") if args.size < 1
       
-    value  = args.shift
-    result = true
-    
-    if value == false || value.match(/^\s*(false|FALSE|False)\s*$/)
-      result = false
-    end
-    return result
+    return Coral::Data.is_false?(args[0])
   end
 end

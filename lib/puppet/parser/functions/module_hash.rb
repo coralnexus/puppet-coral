@@ -7,13 +7,18 @@ module Puppet::Parser::Functions
   newfunction(:module_hash, :type => :rvalue, :doc => <<-EOS
 This function performs a lookup for a variable value in various locations:
 See: module_params()
-If no value is found in the defined sources, it returns an empty string ('')
+If no value is found in the defined sources, it returns an empty hash ({})
     EOS
 ) do |args|
 
     raise(Puppet::ParseError, "module_hash(): Define at least the variable name " +
       "given (#{args.size} for 1)") if args.size < 1
 
-    return function_module_param([ args[0], args[1], 'hash', args[2] ])
+    var_name      = args[0]
+    default_value = ( args[1] ? args[1] : {} )  
+    options       = ( args[2] ? args[2] : {} )
+    
+    config = Coral::Config.new(options).set(:context, :hash)
+    return function_module_param([ var_name, default_value, config.options ])
   end
 end

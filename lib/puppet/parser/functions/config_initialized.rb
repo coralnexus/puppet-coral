@@ -8,15 +8,12 @@ module Puppet::Parser::Functions
 This function checks if Hiera is fully configured and ready to query.
     EOS
 ) do |args|
-
-    begin
-      if Puppet::Parser::Functions.function('hiera') && lookupvar("::hiera_ready") == 'true'
-        return true
-      end
+    options = ( args[0] ? args[0] : {} )
     
-    rescue Exception # Prevent abortions.
-    end
-    
-    return false
+    config = Coral::Config.new(options, {
+      :scope     => self,
+      :init_fact => 'hiera_ready'  
+    })  
+    return Coral::Config.initialized?(config)
   end
 end

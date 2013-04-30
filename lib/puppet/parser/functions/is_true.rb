@@ -12,6 +12,6 @@ This function checks whether a given value is true.
     raise(Puppet::ParseError, "is_true(): Must have a value to check; " +
       "given (#{args.size} for 1)") if args.size < 1
       
-    return Coral::Data.is_true?(args[0])
+    return Coral::Data.true?(args[0])
   end
 end

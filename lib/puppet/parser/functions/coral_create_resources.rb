@@ -71,28 +71,43 @@ ENDHEREDOC
       raise ArgumentError, "could not create resource of unknown type #{type_name}"
     end
   end
+  #dbg(args[1], 'coral_create_resources -> resources')
+  
   # iterate through the resources to create
   defaults = args[2] || {}
   args[1].each do |title, params|
+    #dbg(title, 'title')
     params = Puppet::Util.symbolizehash(defaults.merge(params))
     raise ArgumentError, 'params should not contain title' if(params[:title])
+    #dbg(params, 'params')
     case type_of_resource
     # JJM The only difference between a type and a define is the call to instantiate_resource
     # for a defined type.
     when :type, :define
+      #dbg(resource, 'resource (type | define)')
       p_resource = Puppet::Parser::Resource.new(type_name, title, :scope => self, :source => resource)
       p_resource.virtual = type_virtual
       p_resource.exported = type_exported
-      {:name => title}.merge(params).each do |k,v|
+      
+      namevar = Coral::Resource.namevar(type_name, title).to_sym
+      #dbg(namevar, "#{type_name} -> namevar")
+      resource_name = params.has_key?(namevar) ? params[namevar] : title
+      #dbg(resource_name, "resource name")
+      
+      {:name => resource_name}.merge(params).each do |k,v|
         p_resource.set_parameter(k,v)
       end
       if type_of_resource == :define then
         resource.instantiate_resource(self, p_resource)
       end
+      #dbg(p_resource, 'resource -> final')
       compiler.add_resource(self, p_resource)
     when :class
+      #dbg(title, 'title')
       klass = find_hostclass(title)
+      #dbg(klass, 'class')
       raise ArgumentError, "could not find hostclass #{title}" unless klass
+      #dbg(params, 'params')
       klass.ensure_in_catalog(self, params)
       compiler.catalog.add_class(title)
     end

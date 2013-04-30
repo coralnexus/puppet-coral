@@ -75,7 +75,7 @@ module Resource
   #---
   
   def self.translate_resource_refs(type_name, resource_refs, options = {})
-    return :undef if Data.undef?(resource_refs) || resource_refs.empty?
+    return :undef if Data.undef?(resource_refs)
     
     config         = Config.ensure(options)
     resource_names = config.get(:resource_names, {})
@@ -85,42 +85,55 @@ module Resource
     group          = config.get(:title_var_group, 1)
     flags          = config.get(:title_flags, '')
     
+    allow_single   = config.get(:allow_single_return, true)
+    
     regexp         = Regexp.new(pattern, flags.split(''))
     
     type_name      = type_name.sub(/^\@?\@/, '')
     values         = []
         
-    if resource_refs.is_a?(String)
-      resource_refs = resource_refs.split(/\s*,\s*/)
-      unless prefix.empty?
-        resource_refs.collect! do |value|
-          if ! value.match(regexp)
-            value  
-          elsif resource_names.has_key?(value)
-            "#{prefix}_#{value}"
-          else
-            nil
-          end           
+    case resource_refs
+    when String
+      if resource_refs.empty?
+        return :undef 
+      else
+        resource_refs = resource_refs.split(/\s*,\s*/)
+        unless prefix.empty?
+          resource_refs.collect! do |value|
+            if ! value.match(regexp)
+              value  
+            elsif resource_names.has_key?(value)
+              "#{prefix}_#{value}"
+            else
+              nil
+            end           
+          end
         end
       end
+        
+    when Puppet::Resource
+      resource_refs = [ resource_refs ]  
     end
+    
     resource_refs.each do |ref|
-      unless ref.nil?
-        #dbg(ref, 'reference')
+      #dbg(ref, 'reference -> init')
+      unless ref.nil?        
         unless ref.is_a?(Puppet::Resource)
           ref_is_title = ref.match(regexp)
           if prefix.empty? && ref_is_title && ! resource_names.has_key?(ref)
+            #dbg(ref, 'stripping without prefix')
             ref = nil
           end
           unless ref.nil?
             ref = ref_is_title ? Puppet::Resource.new(type_name, ref) : Puppet::Resource.new(ref)
+            #dbg(ref, 'new ref')
           end
         end
-        #dbg(ref, 'reference')       
+        #dbg(ref, 'reference -> final')       
         values << ref unless ref.nil?
       end
     end
-    return values[0] if values.length == 1
+    return values[0] if allow_single && values.length == 1
     return values
   end
   

@@ -1,12 +1,25 @@
 
+module Kernel
+  def dbg(data, label = '')
+    require 'pp'
+    
+    puts '>>----------------------'
+    unless label.empty?
+      puts label
+      puts '---'
+    end
+    pp data
+    puts '<<'
+  end
+end
+
 module Coral
 module Data
   
   def self.value(value, undef_empty = false)
     case value
     when String # It SUCKS that Puppet translates undef to '' in functions :-(
-      if ( undef_empty && value.empty? ) || 
-        value.match(/^\s*(undef|UNDEF|Undef|nil|NIL|Nil)\s*$/)
+      if undef_empty && undef?(value)
         value = nil
       elsif value.match(/^\s*(true|TRUE|True)\s*$/)
         value = true
@@ -29,7 +42,18 @@ module Data
   
   #---
   
-  def self.is_true?(value)
+  def self.undef?(value)
+    if value.nil? || 
+      (value.is_a?(Symbol) && value == :undef || value == :undefined) || 
+      (value.is_a?(String) && value.match(/^\s*(undef|UNDEF|Undef|nil|NIL|Nil)\s*$/))
+      return true
+    end
+    return false  
+  end
+  
+  #---
+  
+  def self.true?(value)
     if value == true || value.match(/^\s*(true|TRUE|True)\s*$/)
       return true
     end
@@ -38,7 +62,7 @@ module Data
   
   #---
   
-  def self.is_false?(value)
+  def self.false?(value)
     if value == false || value.match(/^\s*(false|FALSE|False)\s*$/)
       return true
     end
@@ -62,68 +86,80 @@ module Data
     
     search_name = config.get(:search_name, true)
     
-    #puts "lookup -> #{name}"
-    #pp default
+    #dbg(default, "lookup -> #{name}")
     
     if Config.initialized?(options)
       unless scope.respond_to?("[]")
         scope = Hiera::Scope.new(scope)
       end
       value = hiera.lookup(name, default, scope, override, context)
-      #pp value
-    end
-
-    if value.nil? && scope.respond_to?('lookupvar')
+      #dbg(value, "hiera -> #{name}")
+    end 
+    
+    if undef?(value) && scope.respond_to?('lookupvar')
+      log_level = Puppet::Util::Log.level
+      Puppet::Util::Log.level = :err # Don't want failed parameter lookup warnings here.
+      
       if base_names
         if base_names.is_a?(String)
           base_names = [ base_names ]
         end
         base_names.each do |item|
           value = scope.lookupvar("#{prefix_text}#{item}#{sep}#{name}")
-          #pp value
-          break unless value.nil?  
+          #dbg(value, "#{prefix_text}#{item}#{sep}#{name}")
+          break unless undef?(value)  
         end
       end
-      if value.nil? && search_name
+      if undef?(value) && search_name
         value = scope.lookupvar("#{prefix_text}#{name}")
-        #pp value
+        #dbg(value, "#{prefix_text}#{name}")
       end
+      Puppet::Util::Log.level = log_level
     end    
-    value = default if value.nil?
+    value = default if undef?(value)
     
-    #pp value    
+    #dbg(value, "result -> #{name}")    
     return value  
   end
   
   #---
   
   def self.merge(data, force = true)
-    value = nil   
+    value = data
     
     # Special case because this method is called from within Config.new so we 
     # can not use Config.ensure, as that would cause an infinite loop.
     force = force.is_a?(Coral::Config) ? force.get(:force, force) : force
     
-    case data
-    when Hash
-      value = data  
-    when Array
-      value = {}
+    #dbg(data, 'data')
+    
+    if data.is_a?(Array)
+      value = data.shift
       data.each do |item|
-        case item
+        #dbg(item, 'item')
+        case value
         when Hash
           begin
             require 'deep_merge'
             value = force ? value.deep_merge!(item) : value.deep_merge(item)
           rescue LoadError
-            value = value.merge(item)
+            if item.is_a?(Hash) # Non recursive top level by default.
+              value = value.merge(item)                
+            elsif force
+              value = item
+            end
           end  
         when Array
-          value = merge([ value, item ], force)
+          if item.is_a?(Array)
+            value = value.concat(item).uniq
+          elsif force
+            value = item
+          end
         end
-      end
+      end  
     end
-            
+    
+    #dbg(value, 'value')            
     return value
   end
   
@@ -133,9 +169,9 @@ module Data
     config  = Config.ensure(options)
     results = {}
     
-    if override
+    unless undef?(override)
       case data
-      when String
+      when String, Symbol
         data = [ data, override ] if data != override
       when Array
         data << override unless data.include?(override)
@@ -145,7 +181,7 @@ module Data
     end
     
     case data
-    when String
+    when String, Symbol
       results = lookup(data, {}, config)
       
     when Array
@@ -153,7 +189,7 @@ module Data
         if item.is_a?(String)
           item = lookup(item, {}, config)
         end
-        if ! item.empty?
+        unless undef?(item)
           results = merge([ results, item ], config)
         end
       end
@@ -170,42 +206,44 @@ module Data
   def self.interpolate(value, scope, options = {})    
     config  = Config.ensure(options)
   
-    pattern = config.get(:pattern, '(\$\{)?([a-zA-Z0-9\_\-]+)(\})?')
+    pattern = config.get(:pattern, '\$(\{)?([a-zA-Z0-9\_\-]+)(\})?')
     group   = config.get(:var_group, 2)
     flags   = config.get(:flags, '')
     
     if scope.is_a?(Hash)
-      if pattern.is_a?(String)
-        pattern = Regexp.escape(pattern)
-      end
       regexp = Regexp.new(pattern, flags.split(''))
     
       replace = lambda do |item|
         matches = item.match(regexp)
-        value   = nil
-      
+        result  = nil
+        
+        #dbg(item, 'item')
+        #dbg(matches, 'matches')
+        
         unless matches.nil?
           replacement = scope.search(matches[group], config)
-          value       = value.gsub(matches[0], replacement) unless replacement.nil?
+          result      = item.gsub(matches[0], replacement) unless replacement.nil?
         end
-        return value
+        return result
       end
       
       case value
       when String
+        #dbg(value, 'interpolate (string) -> init')
         while (temp = replace.call(value))
+          #dbg(temp, 'interpolate (string) -> replacement')
           value = temp
         end
         
       when Hash
-        results = {}
+        #dbg(value, 'interpolate (hash) -> init')
         value.each do |key, data|
+          #dbg(data, "interpolate (#{key}) -> data")
           value[key] = interpolate(data, scope, config)
         end
-        value = results
       end
     end
-    
+    #dbg(value, 'interpolate -> result')
     return value  
   end
 end
@@ -216,7 +254,7 @@ end
 
 class Hash
   def search(search_key, options = {})
-    config = Config.ensure(options)
+    config = Coral::Config.ensure(options)
     value  = nil
     
     recurse       = config.get(:recurse, false)
@@ -231,7 +269,7 @@ class Hash
         
         recurse_level -= 1 unless recurse_level == -1
         value = value.search(search_key, 
-          Config.new(config).set(:recurse_level, recurse_level)
+          Coral::Config.new(config).set(:recurse_level, recurse_level)
         )
       end
       break unless value.nil?

@@ -38,11 +38,15 @@ If no resources are found, it returns without creating anything.
       :scope     => self,
       :init_fact => 'hiera_ready'
     })
-    resources      = Coral::Data.normalize(var_name, override_dir, config)
+    resources      = Coral::Data.normalize(var_name, override_var, config)
     default_values = Coral::Data.normalize(default_values, default_var, config) 
+    
+    #dbg(resources, 'resources -> init')
+    #dbg(default_values, 'default_values -> init')
     resources      = Coral::Resource.normalize(definition_name, resources, config)
     
     if resources && ! resources.empty?
+      #dbg(resources, 'resources -> entry')
       resources.each do |name, data|
         unless data.empty?
           resources[name] = Coral::Data.merge([ default_values, data ], config)
@@ -63,12 +67,14 @@ If no resources are found, it returns without creating anything.
           end
         end
       end
+      #dbg(resources, 'resources -> pre-translate')
       resources = Coral::Resource.translate(definition_name, resources, 
         config.import({
           :resource_prefix => tag,
           :title_prefix    => tag
         })
       )
+      #dbg(resources, 'resources -> result')
       function_coral_create_resources([ definition_name, resources ])
     end
   end

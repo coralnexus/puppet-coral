@@ -5,8 +5,8 @@ module Template
   #-----------------------------------------------------------------------------
   # General template utilities
   
-  def self.instance(class_name, options = {})
-    return Template::const_get(class_name).new(options)
+  def self.instance(class_name, options = {}, defaults = {}, force = true)
+    return Template::const_get(class_name).new(options, defaults, force)
   end
   
   #---
@@ -37,16 +37,27 @@ module Template
   def self.render(class_name, data, options = {})
     config = Config.ensure(options)
     
+    #dbg(class_name, 'template engine name')
+    #dbg(data, 'template data -> init')
+    
     case data
     when String
       data = Data.lookup(data, {}, config)
     when Array
       data = Data.merge(data, config)
-    end    
+    end
+    #dbg(data, 'template data -> post merge')
+      
     data = Data.interpolate(data, data, config)
+    #dbg(data, 'template data -> post interpolate')
     
     engine = instance(class_name, config, {}, config.get(:force, true))
-    return engine.render(process(data))
+    #dbg(engine, 'template engine')
+    
+    output = engine.render(process(data))
+    #dbg(output, 'template output')
+    
+    return output
   end
 
   #-----------------------------------------------------------------------------

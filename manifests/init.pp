@@ -61,7 +61,7 @@
 #   }
 #
 class coral (
-
+  $base_name                = 'coral',
   $package_ensure           = $coral::params::package_ensure,
   $auto_translate           = $coral::params::auto_translate,
   $fact_env_file            = $coral::params::fact_env_file,
@@ -76,41 +76,25 @@ class coral (
   $apt_purge_preferences_d  = $coral::params::apt_purge_preferences_d
 
 ) inherits coral::params {
+
   coral_initialize($auto_translate)
 
   include stdlib
   include firewall
 
-  $base_name = 'coral'
-
   #-----------------------------------------------------------------------------
   # Installation
 
-  $setup_package_names = normalize(
-    $coral::params::setup_package_names,
-    module_array('setup_package_names')
-  )
-  $build_package_names = normalize(
-    $coral::params::build_package_names,
-    module_array('build_package_names')
-  )
-  $common_package_names = normalize(
-    $coral::params::common_package_names,
-    module_array('common_package_names')
-  )
-  $extra_package_names = normalize(
-    $coral::params::extra_package_names,
-    module_array('extra_package_names')
-  )
-  $runtime_package_names = normalize(
-    $coral::params::runtime_package_names,
-    module_array('runtime_package_names')
-  )
+  $setup_package_names   = deep_merge($coral::params::setup_package_names, module_array('setup_package_names'))
+  $build_package_names   = deep_merge($coral::params::build_package_names, module_array('build_package_names'))
+  $common_package_names  = deep_merge($coral::params::common_package_names, module_array('common_package_names'))
+  $extra_package_names   = deep_merge($coral::params::extra_package_names, module_array('extra_package_names'))
+  $runtime_package_names = deep_merge($coral::params::runtime_package_names, module_array('runtime_package_names'))
 
   #---
 
   case $::operatingsystem {
-    debian, ubuntu: {
+    debian, ubuntu : {
       class { apt:
         always_apt_update    => value($apt_always_apt_update),
         disable_keys         => value($apt_disable_keys),
@@ -132,19 +116,21 @@ class coral (
 
   coral::packages { $base_name:
     resources => {
-      build_packages => {
+      build_packages  => {
         name => $build_package_names
       },
       common_packages => {
         name    => $common_package_names,
         require => 'build_packages'
       },
-      extra_packages => {
+      extra_packages  => {
         name    => $extra_package_names,
         require => 'common_packages'
       }
     },
-    defaults => { ensure => $package_ensure }
+    defaults  => {
+      ensure => $package_ensure
+    }
   }
 
   class { 'coral::runtime':
@@ -160,10 +146,7 @@ class coral (
     resources => {
       fact_env => {
         path    => $fact_env_file,
-        content => render($fact_template_class,
-          [ $coral::params::facts, module_hash('facts') ],
-          { name_prefix => 'FACTER' }
-        )
+        content => render($fact_template_class, [ $coral::params::facts, module_hash('facts') ], { name_prefix => 'FACTER' })
       }
     },
     require => Coral::Packages[$base_name]

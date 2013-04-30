@@ -12,6 +12,7 @@ This function Merges multiple hashes together recursively.
     raise(Puppet::ParseError, "deep_merge(): Define at least one hash " +
       "given (#{args.size} for 1)") if args.size < 1
       
-    return Coral::Data.merge(args)
+    results = Coral::Data.merge(args)
+    return results
   end
 end

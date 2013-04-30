@@ -12,11 +12,11 @@ This function loads all of the Coral Ruby library files and, if requested,
  processing and translation of string data coming in from Hiera.
     EOS
 ) do |args|
-    auto_translate = ( function_value([ args[0] ]) ? true : false)  
+    auto_translate = ( args[0] && args[0] != 'false' ? true : false)  
     lib_dir        = File.join(File.dirname(__FILE__), '..', '..', '..')
     
     require_files  = lambda do |base_path|
-      if Dir.exists?(base_path)
+      if File.exists?(base_path)
         Dir.glob(File.join(base_path, '*.rb')).each do |file|
           require file
         end

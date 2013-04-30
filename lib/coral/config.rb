@@ -1,6 +1,6 @@
 
 module Coral
-module Config
+class Config
     
   def self.initialized?(options = {})
     config = Config.ensure(options)
@@ -117,6 +117,12 @@ module Config
   
   def [](name, default = nil)
     get(name, default)
+  end
+  
+  #---
+  
+  def options
+    return @options
   end
 end
 end

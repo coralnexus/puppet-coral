@@ -6,8 +6,11 @@ module Resource
     config    = Config.ensure(options)
     resources = Data.value(resources)
     
-    unless resources.nil? || resources.empty?
+    #dbg(resources, 'normalize -> init')
+    
+    unless Data.undef?(resources) || resources.empty?
       resources.keys.each do |name|
+        #dbg(name, 'normalize -> name')
         if ! resources[name] || resources[name].empty? || ! resources[name].is_a?(Hash)        
           resources.delete(name)
         else
@@ -16,11 +19,14 @@ module Resource
           namevar = namevar(type_name, name)
           if resources[name].has_key?(namevar)
             value = resources[name][namevar]
-            unless value.nil? || value.empty?
+            if Data.undef?(value) || value.empty?
+              #dbg(value, "delete #{name}")
               resources.delete(name)
               normalize = false
             end  
           end
+          
+          #dbg(resources, 'normalize -> resources')
           
           if normalize
             resources[name] = normalize_keys(resources[name])
@@ -36,56 +42,83 @@ module Resource
   def self.translate(type_name, resources, options = {})
     config    = Config.ensure(options)
     resources = Data.value(resources)
+    results   = {}
+        
+    #dbg(resources, 'resources -> translate')
     
     prefix = config.get(:resource_prefix, '')
     
+    name_map = {}
+    resources.keys.each do |name|
+      name_map[name] = true
+    end
+    config[:resource_names] = name_map
+    
     resources.each do |name, data|
-      resources[name]['before']    = translate_resource_refs(type_name, data['before'], config) if data.has_key?('before')
-      resources[name]['notify']    = translate_resource_refs(type_name, data['notify'], config) if data.has_key?('notify')
-      resources[name]['require']   = translate_resource_refs(type_name, data['require'], config) if data.has_key?('require')       
-      resources[name]['subscribe'] = translate_resource_refs(type_name, data['subscribe'], config) if data.has_key?('subscribe')
+      #dbg(name, 'name')
+      #dbg(data, 'data')
+      
+      resource = resources[name]
+      resource['before']    = translate_resource_refs(type_name, data['before'], config) if data.has_key?('before')
+      resource['notify']    = translate_resource_refs(type_name, data['notify'], config) if data.has_key?('notify')
+      resource['require']   = translate_resource_refs(type_name, data['require'], config) if data.has_key?('require')       
+      resource['subscribe'] = translate_resource_refs(type_name, data['subscribe'], config) if data.has_key?('subscribe')
       
       unless prefix.empty?
-        resources["#{prefix}-#{name}"] = resources[name]
-        resources.delete(name)
+        name = "#{prefix}_#{name}"
       end
+      results[name] = resource
     end
-    return resources
+    return results
   end
   
   #---
   
   def self.translate_resource_refs(type_name, resource_refs, options = {})
-    return :undef if resource_refs.nil? || resource_refs.empty?
+    return :undef if Data.undef?(resource_refs) || resource_refs.empty?
     
-    config  = Config.ensure(options)
-    prefix  = config.get(:title_prefix, '')
+    config         = Config.ensure(options)
+    resource_names = config.get(:resource_names, {})
+    prefix         = config.get(:title_prefix, '')
     
-    pattern = config.get(:title_pattern, '^\s*([^\[\]]+)\s*$')
-    group   = config.get(:title_var_group, 1)
-    flags   = config.get(:title_flags, '')
+    pattern        = config.get(:title_pattern, '^\s*([^\[\]]+)\s*$')
+    group          = config.get(:title_var_group, 1)
+    flags          = config.get(:title_flags, '')
     
-    if pattern.is_a?(String)
-      pattern = Regexp.escape(pattern)
-    end
-    regexp = Regexp.new(pattern, flags.split(''))
+    regexp         = Regexp.new(pattern, flags.split(''))
     
-    type_name = type_name.sub(/^\@?\@/, '')
-    values    = []
+    type_name      = type_name.sub(/^\@?\@/, '')
+    values         = []
         
     if resource_refs.is_a?(String)
       resource_refs = resource_refs.split(/\s*,\s*/)
       unless prefix.empty?
         resource_refs.collect! do |value|
-          "#{prefix}-#{value}"  
+          if ! value.match(regexp)
+            value  
+          elsif resource_names.has_key?(value)
+            "#{prefix}_#{value}"
+          else
+            nil
+          end           
         end
       end
     end
     resource_refs.each do |ref|
-      if ! ref.is_a?(Puppet::Resource)
-        ref = ref.match(regexp) ? Puppet::Resource.new(type_name, ref) : Puppet::Resource.new(ref)
-      end       
-      values << ref
+      unless ref.nil?
+        #dbg(ref, 'reference')
+        unless ref.is_a?(Puppet::Resource)
+          ref_is_title = ref.match(regexp)
+          if prefix.empty? && ref_is_title && ! resource_names.has_key?(ref)
+            ref = nil
+          end
+          unless ref.nil?
+            ref = ref_is_title ? Puppet::Resource.new(type_name, ref) : Puppet::Resource.new(ref)
+          end
+        end
+        #dbg(ref, 'reference')       
+        values << ref unless ref.nil?
+      end
     end
     return values[0] if values.length == 1
     return values

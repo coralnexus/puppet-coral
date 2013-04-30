@@ -29,6 +29,10 @@
 #   - Provides a function and fact based framework for working with modules.
 #   - Installs general purpose packages and manages custom facts on the server.
 #   - Creates an extensible firewall rule system and locked down default.
+#   - Installs the Ruby language
+#   - Installs the Ruby Gem package manager
+#   - Configures the Ruby environment
+#   - Installs and configures other Ruby related resources as needed
 #
 #
 # Requires:
@@ -61,11 +65,12 @@
 #   }
 #
 class coral (
-  $base_name                = 'coral',
   $package_ensure           = $coral::params::package_ensure,
   $auto_translate           = $coral::params::auto_translate,
   $fact_env_file            = $coral::params::fact_env_file,
-  $fact_template_class      = $coral::params::fact_template_class,
+  $ruby_env_file            = $coral::params::ruby_env_file,
+  $vagrant_env_file         = $coral::params::vagrant_env_file,
+  $env_template_class       = $coral::params::env_template_class,
   $allow_icmp               = $coral::params::allow_icmp,
   $apt_always_apt_update    = $coral::params::apt_always_apt_update,
   $apt_disable_keys         = $coral::params::apt_disable_keys,
@@ -73,14 +78,20 @@ class coral (
   $apt_proxy_port           = $coral::params::apt_proxy_port,
   $apt_purge_sources_list   = $coral::params::apt_purge_sources_list,
   $apt_purge_sources_list_d = $coral::params::apt_purge_sources_list_d,
-  $apt_purge_preferences_d  = $coral::params::apt_purge_preferences_d
+  $apt_purge_preferences_d  = $coral::params::apt_purge_preferences_d,
+  $gem_names                = $coral::params::gem_names,
+  $gem_ensure               = $coral::params::gem_ensure,
+  $ruby_set_active_command  = $coral::params::ruby_set_active_command,
+  $gem_set_active_command   = $coral::params::gem_set_active_command
 
 ) inherits coral::params {
+
+  $base_name = $coral::params::base_name
 
   coral_initialize($auto_translate)
 
   include stdlib
-  include firewall
+  #include firewall
 
   #-----------------------------------------------------------------------------
   # Installation
@@ -125,12 +136,23 @@ class coral (
       },
       extra_packages  => {
         name    => $extra_package_names,
-        require => 'common_packages'
+        require => 'common_packages',
+        subscribe => Exec["${base_name}_ruby_active"]
       }
     },
     defaults  => {
       ensure => $package_ensure
     }
+  }
+
+  coral::gems { $base_name:
+    resources => {
+      gems => {
+        name => $gem_names
+      }
+    },
+    defaults => { ensure => $gem_ensure },
+    subscribe => Exec["${base_name}_gem_active"]
   }
 
   class { 'coral::runtime':
@@ -146,7 +168,16 @@ class coral (
     resources => {
       fact_env => {
         path    => $fact_env_file,
-        content => render($fact_template_class, [ $coral::params::facts, module_hash('facts') ], { name_prefix => 'FACTER' })
+        content => render($env_template_class, [ $coral::params::facts, module_hash('facts') ], { name_prefix => 'FACTER' })
+      },
+      vagrant_env => {
+        path    => $vagrant_env_file,
+        ensure  => 'absent'
+      },
+      ruby_env => {
+        path    => $ruby_env_file,
+        content => render($env_template_class, [ $coral::params::ruby_variables, module_hash('ruby_variables') ]),
+        require => 'vagrant_env'
       }
     },
     require => Coral::Packages[$base_name]
@@ -157,25 +188,36 @@ class coral (
   }
 
   # These are added to the Firewall execution flow in site.pp
-  include coral::firewall_pre_rules
-  include coral::firewall_post_rules
+  #include coral::firewall_pre_rules
+  #include coral::firewall_post_rules
 
-  coral::firewall { $base_name:
-    resources => {
-      icmp => {
-        name   => $allow_icmp ? { true => '101 INPUT allow ICMP', default => '' },
-        icmp   => '8',
-        proto  => 'icmp',
-        action => 'accept'
-      }
-    }
-  }
+  #coral::firewall { $base_name:
+  #  resources => {
+  #    icmp => {
+  #      name   => $allow_icmp ? { true => '101 INPUT allow ICMP', default => '' },
+  #      icmp   => '8',
+  #      proto  => 'icmp',
+  #      action => 'accept'
+  #    }
+  #  }
+  #}
 
   #-----------------------------------------------------------------------------
   # Actions
 
   coral::exec { $base_name:
-    resources => {}
+    resources => {
+      ruby_active => {
+        command     => $ruby_set_active_command,
+        refreshonly => true,
+        subscribe   => Package["${base_name}_common_packages"]
+      },
+      gem_active => {
+        command     => $gem_set_active_command,
+        refreshonly => true,
+        subscribe   => Package["${base_name}_extra_packages"]
+      }
+    }
   }
 
   #-----------------------------------------------------------------------------
@@ -183,7 +225,7 @@ class coral (
 
   coral::services { $base_name:
     resources => {},
-    require   => Coral::Repos[$base_name]
+    require   => [ Coral::Gems[$base_name] ]#, Coral::Firewall[$base_name] ]
   }
 
   coral::cron { $base_name:

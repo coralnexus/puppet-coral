@@ -156,15 +156,8 @@ class coral inherits coral::params {
   #-----------------------------------------------------------------------------
   # Services
 
-  coral::service { $base_name:
-    resources => {},
-    require   => Coral::Firewall[$base_name]
-  }
-
-  coral::cron { $base_name:
-    resources => {},
-    require => Coral::Service[$base_name]
-  }
+  coral::service { $base_name: require => Coral::Firewall[$base_name] }
+  coral::cron { $base_name: require => Coral::Service[$base_name] }
 
   #-----------------------------------------------------------------------------
   # Resources

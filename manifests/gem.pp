@@ -1,5 +1,5 @@
 
-define coral::gems (
+define coral::gem (
 
   $resources = {},
   $overrides = {},
@@ -7,13 +7,13 @@ define coral::gems (
   $options   = {}
 
 ) {
-  $base_name = $coral::params::base_name
+  $ruby_name = $coral::params::ruby_name
 
-  coral::packages { "${name}_gem":
+  coral::package { "${name}_gem":
     resources => $resources,
     overrides => $overrides,
     defaults  => [ $defaults, { provider => 'gem' } ],
     options   => $options,
-    require   => File["${base_name}_ruby_env"]
+    require   => File["${ruby_name}_env"]
   }
 }

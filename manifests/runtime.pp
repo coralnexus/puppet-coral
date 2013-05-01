@@ -1,20 +1,16 @@
 
-class coral::runtime (
-
-  $packages = [],
-  $ensure   = 'present',
-
-) {
+class coral::runtime {
+  $base_name = $coral::params::base_name
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::packages { coral_runtime:
+  coral::package { "${base_name}_runtime":
     resources => {
       all => {
-        name => $packages
+        name => $coral::params::runtime_package_names
       }
     },
-    defaults => { ensure => $ensure }
+    defaults => { ensure => $coral::params::package_ensure }
   }
 }

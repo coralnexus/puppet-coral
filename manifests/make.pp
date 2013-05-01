@@ -16,31 +16,31 @@ define coral::make (
   $notify          = undef
 
 ) {
-
-  $base_name = "coral_make_${name}"
+  $base_name = $coral::params::base_name
+  $definition_name = "${base_name}_make_${name}"
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::packages { $base_name:
+  coral::package { $definition_name:
     resources => {
       all => {
         name => $packages
       }
     },
     defaults => { ensure => $package_ensure },
-    require  => Coral::Packages['coral']
+    require  => Coral::Package[$base_name]
   }
 
   #---
 
-  coral::repos { $base_name:
+  coral::vcsrepo { $definition_name:
     resources => {
       repo => {
         path     => $repo_path,
         source   => $repo_source,
         revision => $repo_revision,
-        notify   => Exec["${base_name}-configure"]
+        notify   => Exec["${definition_name}_configure"]
       }
     },
     defaults  => {
@@ -49,12 +49,12 @@ define coral::make (
       owner    => $user,
       group    => $group
     },
-    require => Coral::Packages[$base_name]
+    require => Coral::Package[$definition_name]
   }
 
   #---
 
-  coral::exec { $base_name:
+  coral::exec { $definition_name:
     resources => {
       configure => {
         command => "./configure ${config_options}"
@@ -73,6 +73,6 @@ define coral::make (
       cwd         => $repo_path,
       refreshonly => true
     },
-    require => Coral::Repos[$base_name]
+    require => Coral::Vcsrepo[$base_name]
   }
 }

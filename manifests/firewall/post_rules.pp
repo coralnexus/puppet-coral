@@ -1,15 +1,17 @@
 
-class coral::firewall_post_rules {
-  coral::firewall { coral_exit:
+class coral::firewall::post_rules {
+  $base_name = $coral::params::base_name
+
+  coral::firewall { "${base_name}_firewall_post_rules":
     resources => {
       log_rejected => {
-        name   => '950 INPUT log all rejected',
+        name   => $coral::params::firewall_log_rejected_name,
         chain  => 'INPUT',
         jump   => 'LOG',
         limit  => '5/min'
       },
       reject_all => {
-        name   => '999 Reject all',
+        name   => $coral::params::firewall_reject_all_name,
         chain  => ['INPUT', 'FORWARD'],
         action => 'reject'
       }

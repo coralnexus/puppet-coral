@@ -1,20 +1,16 @@
 
-class coral::setup (
-
-  $packages = [],
-  $ensure   = 'present'
-
-) {
+class coral::setup {
+  $base_name = $coral::params::base_name
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::packages { coral_init:
+  coral::package { "${base_name}_setup":
     resources => {
       all => {
-        name => $packages
+        name => $coral::params::setup_package_names
       }
     },
-    defaults => { ensure => $ensure }
+    defaults => { ensure => $coral::params::package_ensure }
   }
 }

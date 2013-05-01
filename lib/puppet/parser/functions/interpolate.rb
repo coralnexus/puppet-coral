@@ -16,10 +16,7 @@ This function interpolates values from one hash to another for configuration inj
     data    = ( args[1] ? args[1] : {} )
     options = ( args[2] ? args[2] : {} )
     
-    config = Coral::Config.new(options, {
-      :pattern   => '(\$\{)?([a-zA-Z0-9\_\-]+)(\})?',
-      :var_group => 2 
-    })
+    config = Coral::Config.new(options)
     return Coral::Data.interpolate(value, data, config)
   end
 end

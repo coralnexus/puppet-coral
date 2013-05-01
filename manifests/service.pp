@@ -1,5 +1,5 @@
 
-define coral::services (
+define coral::service (
 
   $resources = {},
   $overrides = {},

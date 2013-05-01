@@ -1,5 +1,5 @@
 
-define coral::files (
+define coral::file (
 
   $resources = {},
   $overrides = {},

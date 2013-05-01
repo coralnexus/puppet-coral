@@ -25,16 +25,16 @@ node default {
     purge => true
   }
   Firewall {
-    before  => Class['coral::firewall_post_rules'],
-    require => Class['coral::firewall_pre_rules'],
+    before  => Class['coral::firewall::post_rules'],
+    require => Class['coral::firewall::pre_rules'],
   }
 
   include coral
   Class['coral::default'] -> Class['coral']
 
   Exec {
-    user => global_param('coral::exec_user'),
-    path => global_param('coral::exec_path'),
+    user => $coral::params::exec_user,
+    path => $coral::params::exec_path
   }
 
   #---

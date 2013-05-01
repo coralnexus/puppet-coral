@@ -17,17 +17,17 @@
  */
 class coral::default {
 
-  # This assumes we have created a default directory which contains all of our
-  # default configurations.
-  import "default/*.pp"
-  include coral::default::coral # This module's default configurations
-
-  # Each module that has project level default configurations should be
-  # included below:
-
-  # include coral::default::{module_name}
-
-  # The above should have a corresponding {module_name}.pp in the default
-  # directory.  See the included default/coral.pp for details.
-
 }
+
+# This assumes we have created a default directory which contains all of our
+# default configurations.
+import "default/*.pp"
+include coral::default::coral # This module's default configurations
+
+# Each module that has project level default configurations should be
+# included below:
+
+# include coral::default::{module_name}
+
+# The above should have a corresponding {module_name}.pp in the default
+# directory.  See the included default/coral.pp for details.

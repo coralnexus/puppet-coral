@@ -1,5 +1,5 @@
 
-define coral::repos (
+define coral::package (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::repos (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@vcsrepo', $data, $defaults, $name, $options)
-  Vcsrepo<| tag == $name |>
+  coral_resources('@package', $data, $defaults, $name, $options)
+  Package<| tag == $name |>
 }

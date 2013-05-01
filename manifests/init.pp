@@ -97,8 +97,8 @@ class coral inherits coral::params {
 
   #---
 
-  class { "coral::setup": stage => 'setup' }
-  class { 'coral::runtime': stage => 'runtime' }
+  class { "coral::stage::setup": stage => 'setup' }
+  class { 'coral::stage::runtime': stage => 'runtime' }
 
   #---
 

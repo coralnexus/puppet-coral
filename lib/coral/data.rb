@@ -16,14 +16,38 @@ end
 module Coral
 module Data
   
-  def self.value(value, undef_empty = false)
+  def self.to_json(data)
+    output = ''
+    begin
+      require 'json'
+      output = data.to_json
+    rescue LoadError
+    end
+    return output
+  end
+  
+  #---
+  
+  def self.to_yaml(data)
+    output = ''
+    begin
+      require 'yaml'
+      output = YAML.dump(data)
+    rescue LoadError
+    end
+    return output
+  end
+  
+  #---
+  
+  def self.value(value)
     case value
-    when String # It SUCKS that Puppet translates undef to '' in functions :-(
-      if undef_empty && undef?(value)
+    when String
+      if undef?(value)
         value = nil
-      elsif value.match(/^\s*(true|TRUE|True)\s*$/)
+      elsif true?(value)
         value = true
-      elsif value.match(/^\s*(false|FALSE|False)\s*$/)
+      elsif false?(value)
         value = false
       end
     
@@ -54,7 +78,8 @@ module Data
   #---
   
   def self.true?(value)
-    if value == true || value.match(/^\s*(true|TRUE|True)\s*$/)
+    if value == true || 
+      (value.is_a?(String) && value.match(/^\s*(true|TRUE|True)\s*$/))
       return true
     end
     return false  
@@ -63,63 +88,11 @@ module Data
   #---
   
   def self.false?(value)
-    if value == false || value.match(/^\s*(false|FALSE|False)\s*$/)
+    if value == false || 
+      (value.is_a?(String) && value.match(/^\s*(false|FALSE|False)\s*$/))
       return true
     end
     return false  
-  end
-  
-  #---
-  
-  def self.lookup(name, default = nil, options = {})
-    config = Config.ensure(options)
-    value  = nil
-    
-    context     = config.get(:context, :priority)
-    scope       = config.get(:scope, {})
-    override    = config.get(:override, nil)
-    
-    base_names  = config.get(:search, nil)
-    sep         = config.get(:sep, '::')
-    prefix      = config.get(:prefix, true)    
-    prefix_text = prefix ? sep : ''
-    
-    search_name = config.get(:search_name, true)
-    
-    #dbg(default, "lookup -> #{name}")
-    
-    if Config.initialized?(options)
-      unless scope.respond_to?("[]")
-        scope = Hiera::Scope.new(scope)
-      end
-      value = hiera.lookup(name, default, scope, override, context)
-      #dbg(value, "hiera -> #{name}")
-    end 
-    
-    if undef?(value) && scope.respond_to?('lookupvar')
-      log_level = Puppet::Util::Log.level
-      Puppet::Util::Log.level = :err # Don't want failed parameter lookup warnings here.
-      
-      if base_names
-        if base_names.is_a?(String)
-          base_names = [ base_names ]
-        end
-        base_names.each do |item|
-          value = scope.lookupvar("#{prefix_text}#{item}#{sep}#{name}")
-          #dbg(value, "#{prefix_text}#{item}#{sep}#{name}")
-          break unless undef?(value)  
-        end
-      end
-      if undef?(value) && search_name
-        value = scope.lookupvar("#{prefix_text}#{name}")
-        #dbg(value, "#{prefix_text}#{name}")
-      end
-      Puppet::Util::Log.level = log_level
-    end    
-    value = default if undef?(value)
-    
-    #dbg(value, "result -> #{name}")    
-    return value  
   end
   
   #---
@@ -182,12 +155,12 @@ module Data
     
     case data
     when String, Symbol
-      results = lookup(data, {}, config)
+      results = Config.lookup(data.to_s, {}, config)
       
     when Array
       data.each do |item|
-        if item.is_a?(String)
-          item = lookup(item, {}, config)
+        if item.is_a?(String) || item.is_a?(Symbol)
+          item = Config.lookup(item.to_s, {}, config)
         end
         unless undef?(item)
           results = merge([ results, item ], config)

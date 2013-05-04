@@ -42,7 +42,7 @@ module Template
     
     case data
     when String
-      data = Data.lookup(data, {}, config)
+      data = Config.lookup(data, {}, config)
     when Array
       data = Data.merge(data, config)
     end

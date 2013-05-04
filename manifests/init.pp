@@ -76,6 +76,8 @@ class coral inherits coral::params {
 
   include coral::system::ruby
   include coral::system::puppet
+  include coral::system::ssh
+  include coral::system::sudo
 
   #-----------------------------------------------------------------------------
   # Installation

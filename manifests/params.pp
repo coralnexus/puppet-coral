@@ -9,6 +9,8 @@ class coral::params {
 
   $ruby_name = "${base_name}_ruby"
   $puppet_name = "${base_name}_puppet"
+  $ssh_name = "${base_name}_ssh"
+  $sudo_name = "${base_name}_sudo"
 
   $setup_name = "${base_name}_setup"
   $runtime_name = "${base_name}_runtime"
@@ -46,11 +48,16 @@ class coral::params {
   $hiera_hierarchy = module_array('hiera_hierarchy', [ '%{::hostname}', '%{::environment}', 'common' ])
   $hiera_merge_type = module_param('hiera_merge_type', 'deeper')
 
+  # SSH
+  $ssh_service_ensure = 'running'
+
+  $firewall_ssh_name = module_param('firewall_ssh_name', '150 INPUT Allow new SSH connections')
+
   #---
 
   case $::operatingsystem {
     debian, ubuntu : {
-      # OS Common
+      # Debian Common
       $property_dir = module_param('property_dir', '/var/log/coral')
       $property_dir_mode = module_param('property_dir_mode', '0744')
       $property_file = module_param('property_file', "config.${::operatingsystem}.${time}.json")
@@ -79,7 +86,7 @@ class coral::params {
       $fact_env_file = module_param('fact_env_file', '/etc/profile.d/facts.sh')
       $vagrant_env_file = module_param('vagrant_env_file', '/etc/profile.d/vagrant_ruby.sh')
 
-      # OS Ruby
+      # Debian Ruby
       $ruby_package_names = module_array('ruby_package_names', ['ruby1.9.1', 'ruby1.9.1-dev'])
       $ruby_extra_package_names = module_array('ruby_extra_package_names', ['rubygems1.9.1'])
 
@@ -97,7 +104,7 @@ class coral::params {
       $ruby_set_active_command = module_param('ruby_set_active_command', "update-alternatives --set ruby ${ruby_exec}")
       $gem_set_active_command = module_param('gem_set_active_command', "update-alternatives --set gem ${rubygems_exec}")
 
-      # OS Puppet
+      # Debian Puppet
       $puppet_apt_location = module_param('puppet_apt_location', 'http://apt.puppetlabs.com')
       $puppet_apt_repos = module_param('puppet_apt_repos', 'main')
       $puppet_apt_key = module_param('puppet_apt_key', '4BD6EC30')
@@ -163,6 +170,95 @@ class coral::params {
           'datadir' => '/var/lib/hiera',
         })
       ])
+
+      # Debian SSH
+      $ssh_package_names = module_array('ssh_package_names', ['openssh-server'])
+      $ssh_extra_package_names = module_array('ssh_extra_package_names', ['ssh-import-id'])
+
+      $ssh_service_name = module_param('ssh_service_name', 'ssh')
+
+      $ssh_init_bin = module_param('ssh_init_bin', '/etc/init.d/ssh')
+      $ssh_init_reload = module_param('ssh_init_reload', 'reload')
+      $ssh_init_command = module_param('ssh_init_command', "${ssh_init_bin} ${ssh_init_reload}")
+
+      $ssh_config_file = module_param('ssh_config_file', '/etc/ssh/sshd_config')
+      $ssh_config_template = module_param('ssh_config_template', 'SSHConf')
+
+      $ssh_config_owner = module_param('ssh_config_owner', 'root')
+      $ssh_config_group = module_param('ssh_config_group', 'root')
+      $ssh_config_mode = module_param('ssh_config_mode', '0644')
+
+      # For available options, see: http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd_config+5
+      $ssh_config = module_hash('ssh_config', {
+        'Port'                            => 22,
+        'Protocol'                        => 2,
+        'HostKey'                         => [ '/etc/ssh/ssh_host_rsa_key', '/etc/ssh/ssh_host_dsa_key', '/etc/ssh/ssh_host_ecdsa_key' ],
+        'UsePrivilegeSeparation'          => 'yes',
+        'KeyRegenerationInterval'         => 3600,
+        'ServerKeyBits'                   => 768,
+        'SyslogFacility'                  => 'AUTH',
+        'LogLevel'                        => 'INFO',
+        'LoginGraceTime'                  => 120,
+        'PermitRootLogin'                 => 'yes',
+        'StrictModes'                     => 'yes',
+        'RSAAuthentication'               => 'yes',
+        'PubkeyAuthentication'            => 'yes',
+        'AuthorizedKeysFile'              => '%h/.ssh/authorized_keys',
+        'IgnoreRhosts'                    => 'yes',
+        'RhostsRSAAuthentication'         => 'no',
+        'HostbasedAuthentication'         => 'no',
+        'PermitEmptyPasswords'            => 'no',
+        'ChallengeResponseAuthentication' => 'no',
+        'PasswordAuthentication'          => 'yes',
+        'X11Forwarding'                   => 'yes',
+        'X11DisplayOffset'                => 10,
+        'PrintMotd'                       => 'yes',
+        'PrintLastLog'                    => 'yes',
+        'TCPKeepAlive'                    => 'yes',
+        'AcceptEnv'                       => 'LANG LC_*',
+        'Subsystem'                       => 'sftp /usr/lib/openssh/sftp-server',
+        'UsePAM'                          => 'yes',
+        'UseDNS'                          => 'no',
+        'AllowGroups'                     => [ 'root', 'admin', 'vagrant' ]
+      })
+
+      $ssh_port = interpolate($ssh_config['Port'], $ssh_config)
+
+      # Debian Sudo
+      $visudo_bin = module_param('visudo_bin', '/usr/sbin/visudo')
+      $sudoers_file = module_param('sudoers_file', '/etc/sudoers')
+      $sudoers_test_file = module_param('sudoers_test_file', '/etc/sudoers.test')
+
+      $sudoers_config_owner = module_param('sudoers_config_owner', 'root')
+      $sudoers_config_group = module_param('sudoers_config_group', 'root')
+      $sudoers_config_mode = module_param('sudoers_config_mode', '0440')
+
+      $sudoers_template = module_param('sudoers_template', 'SudoersConf')
+      $sudoers_template_file = module_param('sudoers_template_file', 'coral/sudoers.erb')
+
+      $sudoers_dir = module_param('sudoers_dir', '/etc/sudoers.d')
+
+      # See: http://www.sudo.ws/sudoers.man.html
+      $sudoers_config = module_hash('sudoers_config', {
+        'defaults' => {
+          'Defaults' => {
+            'env_reset'   => '',
+            'secure_path' => '"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"'
+          }
+        },
+        'aliases' => {
+          'User_Alias'  => {},
+          'Runas_Alias' => {},
+          'Host_Alias'  => {},
+          'Cmnd_Alias'  => {}
+        },
+        'specs' => {
+          'root'  => 'ALL=(ALL:ALL) ALL',
+          '%sudo' => 'ALL=(ALL:ALL) NOPASSWD:ALL'
+        }
+      })
+
+      $sudoers_test_command = module_param('sudoers_test_command', "${visudo_bin} -cf ${sudoers_test_file}")
     }
     default : {
       $exec_path = module_array('exec_path', ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin'])

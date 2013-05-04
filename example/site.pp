@@ -30,6 +30,8 @@ node default {
   }
 
   include coral
+  include coral::firewall::pre_rules
+  include coral::firewall::post_rules
   Class['coral::default'] -> Class['coral']
 
   Exec {

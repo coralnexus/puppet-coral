@@ -14,6 +14,6 @@ define coral::gem (
     overrides => $overrides,
     defaults  => [ $defaults, { provider => 'gem' } ],
     options   => $options,
-    require   => File["${ruby_name}_env"]
+    require   => Coral::Package["${ruby_name}_extra"]
   }
 }

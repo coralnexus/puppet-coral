@@ -6,25 +6,31 @@ class coral::system::ruby {
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::package { $system_name:
+  coral::package { "${system_name}_core":
     resources => {
-      dev_packages  => {
-        name => $coral::params::ruby_dev_package_names
-      },
-      common_packages => {
-        name    => $coral::params::ruby_package_names,
-        require => 'dev_packages'
-      },
-      extra_packages  => {
-        name    => $coral::params::ruby_extra_package_names,
-        require => 'common_packages',
-        subscribe => Exec["${system_name}_active"]
+      packages => {
+        name => $coral::params::ruby_package_names
       }
     },
     defaults  => {
       ensure => $coral::params::package_ensure
     },
     require => [ File["${system_name}_env"], Coral::Package[$base_name] ]
+  }
+
+  #---
+
+  coral::package { "${system_name}_extra":
+    resources => {
+      packages  => {
+        name => $coral::params::ruby_extra_package_names
+      }
+    },
+    defaults  => {
+      ensure => $coral::params::package_ensure
+    },
+    subscribe => Exec["${system_name}_active"],
+    require => Coral::Package["${system_name}_core"]
   }
 
   #---
@@ -59,12 +65,12 @@ class coral::system::ruby {
       active => {
         command     => $coral::params::ruby_set_active_command,
         refreshonly => true,
-        subscribe   => Package["${system_name}_common_packages"]
+        subscribe   => Coral::Package["${system_name}_core"]
       },
       gem_active => {
         command     => $coral::params::gem_set_active_command,
         refreshonly => true,
-        subscribe   => Package["${system_name}_extra_packages"]
+        subscribe   => Coral::Package["${system_name}_extra"]
       }
     }
   }

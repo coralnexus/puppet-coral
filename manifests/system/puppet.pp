@@ -1,6 +1,7 @@
 
 class coral::system::puppet {
   $base_name = $coral::params::base_name
+  $ruby_name = $coral::params::ruby_name
   $system_name = $coral::params::puppet_name
 
   #-----------------------------------------------------------------------------
@@ -12,10 +13,9 @@ class coral::system::puppet {
         location   => $coral::params::puppet_apt_location,
         repos      => $coral::params::puppet_apt_repos,
         key        => $coral::params::puppet_apt_key,
-        key_server => $coral::params::puppet_apt_key_server,
-        require    => Class['apt']
+        key_server => $coral::params::puppet_apt_key_server
       }
-      Apt::Source[$system_name] -> Coral::Package[$system_name]
+      Class['apt'] -> Coral::Package[$system_name]
     }
   }
 
@@ -23,22 +23,18 @@ class coral::system::puppet {
 
   coral::package { $system_name:
     resources => {
-      dev_packages  => {
-        name => $coral::params::puppet_dev_package_names
-      },
-      common_packages => {
-        name    => $coral::params::puppet_package_names,
-        require => 'dev_packages'
+      core_packages => {
+        name => $coral::params::puppet_package_names
       },
       extra_packages  => {
         name    => $coral::params::puppet_extra_package_names,
-        require => 'common_packages'
+        require => 'core_packages'
       }
     },
     defaults  => {
       ensure => $coral::params::package_ensure
     },
-    require => Coral::Package[$coral::params::ruby_name]
+    require => Coral::Gem[$ruby_name]
   }
 
   #-----------------------------------------------------------------------------
@@ -92,7 +88,7 @@ class coral::system::puppet {
         ensure => $coral::params::puppet_service_ensure,
       }
     },
-    require   => [ Coral::Gem[$coral::params::ruby_name], Coral::Firewall[$base_name] ]
+    require => [ Coral::Service[$base_name], Coral::Package[$system_name] ]
   }
 
   #---
@@ -107,6 +103,6 @@ class coral::system::puppet {
         minute      => $coral::params::puppet_update_interval
       }
     },
-    require => Coral::Service[$base_name]
+    require => Coral::Service[$system_name]
   }
 }

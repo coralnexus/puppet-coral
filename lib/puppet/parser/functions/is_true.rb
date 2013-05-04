@@ -8,10 +8,13 @@ module Puppet::Parser::Functions
 This function checks whether a given value is true.
     EOS
 ) do |args|
-
-    raise(Puppet::ParseError, "is_true(): Must have a value to check; " +
-      "given (#{args.size} for 1)") if args.size < 1
+    value = nil
+    Coral.backtrace do
+      raise(Puppet::ParseError, "is_true(): Must have a value to check; " +
+        "given (#{args.size} for 1)") if args.size < 1
       
-    return Coral::Data.true?(args[0])
+      value = Coral::Data.true?(args[0])
+    end
+    return value
   end
 end

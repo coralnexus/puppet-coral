@@ -16,23 +16,39 @@ This function performs a lookup for a variable value in various locations follow
 If no value is found in the defined sources, it returns an empty string ('')
     EOS
 ) do |args|
-
-    raise(Puppet::ParseError, "module_param(): Define at least the variable name " +
-      "given (#{args.size} for 1)") if args.size < 1
+    value = nil
+    Coral.backtrace do
+      raise(Puppet::ParseError, "module_param(): Define at least the variable name " +
+        "given (#{args.size} for 1)") if args.size < 1
       
-    var_name        = args[0]
-    default_value   = ( args[1] ? args[1] : '' )
-    options         = ( args[2] ? args[2] : {} )
+      var_name        = args[0]
+      default_value   = ( args.size > 1 ? args[1] : '' )
+      options         = ( args.size > 2 ? args[2] : {} )
     
-    module_name     = parent_module_name
-    module_var_name = "#{module_name}::#{var_name}"
+      module_name     = self.source.module_name
+      module_var_name = "#{module_name}::#{var_name}"
     
-    config = Coral::Config.new(options, {
-      :scope       => self,
-      :init_fact   => 'hiera_ready',
-      :search      => 'coral::default',
-      :search_name => false
-    })    
-    return Coral::Data.lookup(module_var_name, default_value, config)
+      config = Coral::Config.new(options, {
+        :scope       => self,
+        :init_fact   => 'hiera_ready',
+        :search      => 'coral::default',
+        :search_name => false,
+        :force       => true
+      })    
+      value = Coral::Config.lookup(module_var_name, nil, config)
+    
+      if value.nil?
+        value = default_value
+      else
+        context = config.get(:context, false)
+        if context && (context == :array || context == :hash)
+          value = Coral::Data.merge([default_value, value], config)
+        end
+      end
+    
+      Coral::Config.set_property(module_var_name, value)
+      #dbg(value, "param -> #{module_var_name}")
+    end
+    return value
   end
 end

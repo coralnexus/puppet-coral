@@ -59,6 +59,8 @@
 #     require => Class['coral::firewall::pre_rules'],
 #   }
 #   include coral
+#   include coral::firewall::pre_rules
+#   include coral::firewall::post_rules
 #   Exec {
 #     user => $coral::params::exec_user,
 #     path => $coral::params::exec_path
@@ -66,8 +68,6 @@
 #
 class coral inherits coral::params {
   $base_name = $coral::params::base_name
-
-  coral_initialize($coral::params::auto_translate)
 
   include stdlib
   include firewall
@@ -82,7 +82,7 @@ class coral inherits coral::params {
 
   case $::operatingsystem {
     debian, ubuntu : {
-      class { apt:
+      class { 'apt':
         always_apt_update    => $coral::params::apt_always_apt_update,
         disable_keys         => $coral::params::apt_disable_keys,
         proxy_host           => $coral::params::apt_proxy_host,
@@ -97,8 +97,9 @@ class coral inherits coral::params {
 
   #---
 
-  class { "coral::stage::setup": stage => 'setup' }
+  class { 'coral::stage::setup': stage => 'setup' }
   class { 'coral::stage::runtime': stage => 'runtime' }
+  class { 'coral::stage::deploy': stage => 'deploy' }
 
   #---
 
@@ -133,6 +134,13 @@ class coral inherits coral::params {
       vagrant_env => {
         path    => $coral::params::vagrant_env_file,
         ensure  => 'absent'
+      },
+      property_dir => {
+        path   => $coral::params::generate_properties ? { true => $coral::params::property_dir, default => '' },
+        ensure => 'directory',
+        owner  => $coral::params::property_owner,
+        group  => $coral::params::property_group,
+        mode   => $coral::params::property_dir_mode
       }
     }
   }
@@ -143,8 +151,6 @@ class coral inherits coral::params {
 
   #---
 
-  include coral::firewall::pre_rules
-  include coral::firewall::post_rules
   include coral::firewall::icmp
   coral::firewall { $base_name: }
 

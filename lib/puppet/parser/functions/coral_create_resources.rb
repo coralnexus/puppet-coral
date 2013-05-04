@@ -102,6 +102,7 @@ ENDHEREDOC
       end
       #dbg(p_resource, 'resource -> final')
       compiler.add_resource(self, p_resource)
+      
     when :class
       #dbg(title, 'title')
       klass = find_hostclass(title)

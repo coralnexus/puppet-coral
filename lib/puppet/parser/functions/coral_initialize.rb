@@ -12,8 +12,7 @@ This function loads all of the Coral Ruby library files and, if requested,
  processing and translation of string data coming in from Hiera.
     EOS
 ) do |args|
-    auto_translate = ( args[0] && args[0] != 'false' ? true : false)  
-    lib_dir        = File.join(File.dirname(__FILE__), '..', '..', '..')
+    lib_dir = File.join(File.dirname(__FILE__), '..', '..', '..')
     
     require_files  = lambda do |base_path|
       if File.exists?(base_path)
@@ -29,14 +28,18 @@ This function loads all of the Coral Ruby library files and, if requested,
     # Include Coral core library files
     require_files.call(File.join(lib_dir, 'coral'))
     
-    # Include Coral extensions
-    Puppet::Node::Environment.new.modules.each do |mod|
-      if mod.name != 'coral'
-        require_files.call(File.join(mod.path, 'lib', 'coral'))
+    Coral.backtrace do
+      Coral::Config.set_property('coral::time', Time.now.to_i)
+      
+      # Include Hiera extensions
+      require File.join(lib_dir, 'hiera_backend')
+      
+      # Include Coral extensions
+      Puppet::Node::Environment.new.modules.each do |mod|
+        if mod.name != 'coral'
+          require_files.call(File.join(mod.path, 'lib', 'coral'))
+        end      
       end      
     end
-    
-    # Include Hiera extensions if requested
-    require File.join(lib_dir, 'hiera_backend') if auto_translate
   end
 end

@@ -18,15 +18,16 @@ This function performs a lookup for a variable value in various locations follow
 If no value is found in the defined sources, it does not include any classes.
     EOS
 ) do |args|
+    Coral.backtrace do
+      raise(Puppet::ParseError, "coral_include(): Define at least the variable name " +
+        "given (#{args.size} for 1)") if args.size < 1
 
-    raise(Puppet::ParseError, "coral_include(): Define at least the variable name " +
-      "given (#{args.size} for 1)") if args.size < 1
-
-    var_name = args[0]
-    classes  = function_global_array([ var_name, [], args[1] ])
+      var_name = args[0]
+      classes  = function_global_array([ var_name, [], args[1] ])
     
-    if ! classes.empty?
-      function_hiera_include([ classes ])
+      if ! classes.empty?
+        function_hiera_include([ classes ])
+      end
     end
   end
 end

@@ -1,11 +1,12 @@
 
 class coral::stage::setup {
   $base_name = $coral::params::base_name
+  $stage_name = $coral::params::setup_name
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::package { "${base_name}_setup":
+  coral::package { $stage_name:
     resources => {
       all => {
         name => $coral::params::setup_package_names

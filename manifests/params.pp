@@ -79,7 +79,7 @@ class coral::params {
 
       $setup_package_names = module_array('setup_package_names')
       $build_package_names = module_array('build_package_names', ['build-essential', 'libnl-dev', 'libpopt-dev', 'libxml2-dev', 'libssl-dev', 'libcurl4-openssl-dev'])
-      $common_package_names = module_array('common_package_names', ['git', 'vim', 'unzip', 'curl'])
+      $common_package_names = module_array('common_package_names', ['vim', 'unzip', 'curl'])
       $extra_package_names = module_array('extra_package_names')
       $runtime_package_names = module_array('runtime_package_names')
 

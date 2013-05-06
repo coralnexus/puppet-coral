@@ -29,7 +29,7 @@ If no value is found in the defined sources, it returns an empty string ('')
     
       config = Coral::Config.new(options, {
         :scope     => self,
-        :search    => 'coral::default',
+        :search    => 'global::default',
         :init_fact => 'hiera_ready',
         :force     => true
       })    

@@ -74,10 +74,20 @@ class coral inherits coral::params {
 
   #---
 
-  include coral::system::ruby
-  include coral::system::puppet
-  include coral::system::ssh
-  include coral::system::sudo
+  # Core systems to get a fully functional Puppet server with security permissions.
+
+  if ($coral::params::manage_ruby) {
+    include coral::system::ruby
+  }
+  if ($coral::params::manage_puppet) {
+    include coral::system::puppet
+  }
+  if ($coral::params::manage_ssh) {
+    include coral::system::ssh
+  }
+  if ($coral::params::manage_sudo) {
+    include coral::system::sudo
+  }
 
   #-----------------------------------------------------------------------------
   # Installation

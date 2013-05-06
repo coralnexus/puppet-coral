@@ -1,6 +1,7 @@
 
-class coral::system::ssh {
-  $base_name = $coral::params::base_name
+class coral::system::ssh inherits coral::params::ssh {
+
+  $base_name   = $coral::params::base_name
   $system_name = $coral::params::ssh_name
 
   #-----------------------------------------------------------------------------
@@ -9,10 +10,10 @@ class coral::system::ssh {
   coral::package { $system_name:
     resources => {
       core_packages => {
-        name => $coral::params::ssh_package_names
+        name => $coral::params::ssh::package_names
       },
       extra_packages  => {
-        name    => $coral::params::ssh_extra_package_names,
+        name    => $coral::params::ssh::extra_package_names,
         require => 'core_packages'
       }
     },
@@ -28,11 +29,11 @@ class coral::system::ssh {
   coral::file { $system_name:
     resources => {
       conf => {
-        path     => $coral::params::ssh_config_file,
-        content  => render($coral::params::ssh_config_template, $coral::params::ssh_config),
-        owner    => $coral::params::ssh_config_owner,
-        group    => $coral::params::ssh_config_group,
-        mode     => $coral::params::ssh_config_mode,
+        path     => $coral::params::ssh::config_file,
+        content  => render($coral::params::ssh::config_template, $coral::params::ssh::config),
+        owner    => $coral::params::ssh::config_owner,
+        group    => $coral::params::ssh::config_group,
+        mode     => $coral::params::ssh::config_mode,
         require  => Coral::Package[$system_name]
       }
     },
@@ -49,7 +50,7 @@ class coral::system::ssh {
   coral::exec { $system_name:
     resources => {
       reload => {
-        command     => $coral::params::ssh_init_command,
+        command     => $coral::params::ssh::init_command,
         refreshonly => true,
         subscribe   => File["${system_name}_conf"]
       }
@@ -62,8 +63,8 @@ class coral::system::ssh {
   coral::service { $system_name:
     resources => {
       service => {
-        name   => $coral::params::ssh_service_name,
-        ensure => $coral::params::ssh_service_ensure,
+        name   => $coral::params::ssh::service_name,
+        ensure => $coral::params::ssh::service_ensure,
       }
     },
     require => [ Coral::Service[$base_name], Coral::Package[$system_name] ]

@@ -1,6 +1,7 @@
 
-class coral::system::ruby {
-  $base_name = $coral::params::base_name
+class coral::system::ruby inherits coral::params::ruby {
+
+  $base_name   = $coral::params::base_name
   $system_name = $coral::params::ruby_name
 
   #-----------------------------------------------------------------------------
@@ -9,7 +10,7 @@ class coral::system::ruby {
   coral::package { "${system_name}_core":
     resources => {
       packages => {
-        name => $coral::params::ruby_package_names
+        name => $coral::params::ruby::package_names
       }
     },
     defaults  => {
@@ -23,7 +24,7 @@ class coral::system::ruby {
   coral::package { "${system_name}_extra":
     resources => {
       packages  => {
-        name => $coral::params::ruby_extra_package_names
+        name => $coral::params::ruby::extra_package_names
       }
     },
     defaults  => {
@@ -38,10 +39,10 @@ class coral::system::ruby {
   coral::gem { $system_name:
     resources => {
       gems => {
-        name => $coral::params::gem_names
+        name => $coral::params::ruby::gem_names
       }
     },
-    defaults => { ensure => $coral::params::gem_ensure },
+    defaults => { ensure => $coral::params::ruby::gem_ensure },
     subscribe => Exec["${system_name}_gem_active"]
   }
 
@@ -51,8 +52,8 @@ class coral::system::ruby {
   coral::file { $system_name:
     resources => {
       env => {
-        path    => $coral::params::ruby_env_file,
-        content => render($coral::params::env_template, $coral::params::ruby_variables)
+        path    => $coral::params::ruby::env_file,
+        content => render($coral::params::env_template, $coral::params::ruby::variables)
       }
     }
   }
@@ -63,12 +64,12 @@ class coral::system::ruby {
   coral::exec { $system_name:
     resources => {
       active => {
-        command     => $coral::params::ruby_set_active_command,
+        command     => $coral::params::ruby::set_active_command,
         refreshonly => true,
         subscribe   => Coral::Package["${system_name}_core"]
       },
       gem_active => {
-        command     => $coral::params::gem_set_active_command,
+        command     => $coral::params::ruby::gem_set_active_command,
         refreshonly => true,
         subscribe   => Coral::Package["${system_name}_extra"]
       }

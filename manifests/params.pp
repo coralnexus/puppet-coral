@@ -1,6 +1,5 @@
 
 class coral::params inherits coral::default {
-  coral_initialize()
 
   $time = time()
 

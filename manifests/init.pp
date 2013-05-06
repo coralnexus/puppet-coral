@@ -66,7 +66,11 @@
 #     path => $coral::params::exec_path
 #   }
 #
-class coral inherits coral::params {
+class coral {
+
+  coral_initialize()
+  include coral::params # Only including here (instead of inheriting) so we can initialize first.
+
   $base_name = $coral::params::base_name
 
   include stdlib

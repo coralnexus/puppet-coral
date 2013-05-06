@@ -19,7 +19,7 @@ This function returns the string-ified form of a given value.
     
       config = Coral::Config.new(options, {
         :scope  => self,
-        :search => 'coral::default'  
+        :search => 'global::default'  
       })
       value = Coral::Template.render(class_name, data, config)
     end

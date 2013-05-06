@@ -37,19 +37,21 @@ module Template
   def self.render(class_name, data, options = {})
     config = Config.ensure(options)
     
+    normalize   = config.get(:normalize_template, true)
+    interpolate = config.get(:interpolate_template, true)
+    
     #dbg(class_name, 'template engine name')
     #dbg(data, 'template data -> init')
     
-    case data
-    when String
-      data = Config.lookup(data, {}, config)
-    when Array
-      data = Data.merge(data, config)
+    if normalize
+      data = Data.normalize(data, config)
+      #dbg(data, 'template data -> post normalization')
     end
-    #dbg(data, 'template data -> post merge')
-      
-    data = Data.interpolate(data, data, config)
-    #dbg(data, 'template data -> post interpolate')
+    
+    if normalize && interpolate
+      data = Data.interpolate(data, data, config)
+      #dbg(data, 'template data -> post interpolation')
+    end
     
     engine = instance(class_name, config, {}, config.get(:force, true))
     #dbg(engine, 'template engine')

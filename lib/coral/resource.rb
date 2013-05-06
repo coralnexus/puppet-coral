@@ -34,9 +34,6 @@ module Resource
     config    = Config.ensure(options)
     resources = Data.value(resources)
     
-    #prefix = config.get(:resource_prefix, '')
-    #prefix = "#{prefix}_" unless prefix.empty?
-    
     #dbg(resources, 'normalize -> init')
     
     unless Data.undef?(resources) || resources.empty?
@@ -62,7 +59,7 @@ module Resource
                 new_resource = resources[name].clone
                 new_resource[namevar] = item
                 
-                resources[item_name] = normalize_keys(new_resource)
+                resources[item_name] = render(normalize_keys(new_resource), config)
                 add_members(name, item_name)
               end
               resources.delete(name)
@@ -73,12 +70,29 @@ module Resource
           #dbg(resources, 'normalize -> resources')
           
           if normalize
-            resources[name] = normalize_keys(resources[name])
+            resources[name] = render(normalize_keys(resources[name]), config)
           end
         end
       end
     end
     return resources
+  end
+  
+  #---
+  
+  def self.render(resource, options = {})
+    config = Config.ensure(options)
+    
+    resource.keys.each do |name|
+      if match = name.match(/^(.+)_template$/)
+        target = match.captures[0]
+        
+        resource[target] = Coral::Template.render(resource[name], resource[target], config)
+        resource.delete(name)         
+      end
+    end
+    
+    return resource
   end
   
   #---

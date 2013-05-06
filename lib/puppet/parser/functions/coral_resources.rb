@@ -45,13 +45,13 @@ If no resources are found, it returns without creating anything.
     
       #dbg(resources, 'resources -> init')
       #dbg(default_values, 'default_values -> init')
-      resources      = Coral::Resource.normalize(definition_name, resources, config)
+      resources = Coral::Resource.normalize(definition_name, resources, config)
     
       if resources && ! resources.empty?
         #dbg(resources, 'resources -> entry')
         resources.each do |name, data|
           unless data.empty?
-            resources[name] = Coral::Data.merge([ default_values, data ], config)
+            resources[name] = Coral::Resource.render(Coral::Data.merge([ default_values, data ], config), config)
           
             unless tag.empty?
               if ! data.has_key?('tag')

@@ -4,7 +4,7 @@
 # This function performs a lookup for a variable value in various locations
 # following this order
 # - Hiera backend, if present (no prefix)
-# - ::coral::default::varname
+# - ::global::default::varname
 # - ::varname
 # - {default parameter}
 #
@@ -12,7 +12,7 @@ module Puppet::Parser::Functions
   newfunction(:global_param, :type => :rvalue, :doc => <<-EOS
 This function performs a lookup for a variable value in various locations following this order:
 - Hiera backend, if present (no prefix)
-- ::coral::default::varname
+- ::global::default::varname
 - ::varname
 - {default parameter}
 If no value is found in the defined sources, it returns an empty string ('')

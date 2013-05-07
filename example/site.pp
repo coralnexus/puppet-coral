@@ -14,10 +14,11 @@ node default {
 
   #---
 
-  # This assumes the manifest core has been added to the {project dir}/core
-  # directory.
-  import "core/*.pp"
-  include coral::default
+  coral_initialize
+
+  import "*.pp"
+  import "default/*.pp"
+  include global::default
 
   #---
 
@@ -32,7 +33,8 @@ node default {
   include coral
   include coral::firewall::pre_rules
   include coral::firewall::post_rules
-  Class['coral::default'] -> Class['coral']
+
+  Class['global::default'] -> Class['coral']
 
   Exec {
     user => $coral::params::exec_user,
@@ -41,7 +43,15 @@ node default {
 
   #---
 
-  if ! ( config_initialized and exists(global_param('config::common')) ) {
+  import "profiles/*.pp"
+
+  if config_initialized and file_exists(global_param('config::common')) {
+    include base
+    Class['coral'] -> Class['base']
+
+    coral_include('profiles')
+  }
+  else {
     $config_address = global_param('config::address')
 
     notice "Bootstrapping server"
@@ -49,13 +59,5 @@ node default {
 
     include bootstrap
     Class['coral'] -> Class['bootstrap']
-  }
-  else {
-    import "profiles/*.pp"
-
-    include base
-    Class['coral'] -> Class['base']
-
-    coral_include('profiles')
   }
 }

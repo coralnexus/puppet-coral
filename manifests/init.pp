@@ -45,9 +45,11 @@
 #
 # Sample Usage: (from site.pp) <- Puppet node gateway
 #
-#   # This assumes the manifest core has been added to the {project dir}/core directory.
-#   import "core/*.pp"
-#   include coral::default
+#   coral_initialize
+#
+#   import "*.pp"
+#   import "default/*.pp"
+#   include global::default
 #
 #   #---
 #
@@ -58,18 +60,17 @@
 #     before  => Class['coral::firewall::post_rules'],
 #     require => Class['coral::firewall::pre_rules'],
 #   }
+#
 #   include coral
 #   include coral::firewall::pre_rules
 #   include coral::firewall::post_rules
+#
 #   Exec {
 #     user => $coral::params::exec_user,
 #     path => $coral::params::exec_path
 #   }
 #
-class coral {
-
-  coral_initialize()
-  include coral::params # Only including here (instead of inheriting) so we can initialize first.
+class coral inherits coral::params {
 
   $base_name = $coral::params::base_name
 

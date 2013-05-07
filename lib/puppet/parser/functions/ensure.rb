@@ -17,7 +17,7 @@ This function checks a given test and returns the success value or a failure val
       success_value = (args.size > 1 ? args[1] : test)
       failure_value = (args.size > 2 ? args[2] : '')
       
-      if Coral::Data.undef?(test) || (test.respond_to?('empty?') && test.empty?)
+      if Coral::Data.undef?(test) || Coral::Data.false?(test) || (test.respond_to?('empty?') && test.empty?)
         value = failure_value
       else
         value = success_value

@@ -87,6 +87,9 @@ module Resource
       if match = name.match(/^(.+)_template$/)
         target = match.captures[0]
         
+        config.set(:noralize_template, config.get("normalize_#{target}", true))
+        config.set(:interpolate_template, config.get("interpolate_#{target}", true))
+        
         resource[target] = Coral::Template.render(resource[name], resource[target], config)
         resource.delete(name)         
       end

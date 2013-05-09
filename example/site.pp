@@ -14,8 +14,6 @@ node default {
 
   #---
 
-  coral_initialize
-
   import "*.pp"
   import "default/*.pp"
   include global::default

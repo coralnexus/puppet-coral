@@ -45,8 +45,6 @@
 #
 # Sample Usage: (from site.pp) <- Puppet node gateway
 #
-#   coral_initialize
-#
 #   import "*.pp"
 #   import "default/*.pp"
 #   include global::default

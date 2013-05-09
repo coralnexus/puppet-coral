@@ -6,8 +6,11 @@ module Puppet::Parser::Functions
 Returns an boolean value if a given file and/or directory exists on Puppet Master.
 EOS
   ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "file_exists(): Must have a file or directory name specified; " +
         "given (#{args.size} for 1)") if args.size < 1
       

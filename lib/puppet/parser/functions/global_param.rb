@@ -18,8 +18,11 @@ This function performs a lookup for a variable value in various locations follow
 If no value is found in the defined sources, it returns an empty string ('')
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "global_param(): Define at least the variable name " +
         "given (#{args.size} for 1)") if args.size < 1
 
@@ -40,7 +43,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       else
         context = config.get(:context, false)
         if context && (context == :array || context == :hash)
-          value = Coral::Data.merge([default_value, value], config)
+          value = Coral::Util::Data.merge([default_value, value], config)
         end
       end
     

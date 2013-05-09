@@ -8,12 +8,15 @@ module Puppet::Parser::Functions
 This function checks whether a given value is false.
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "is_false(): Must have a value to check; " +
         "given (#{args.size} for 1)") if args.size < 1
       
-      value = Coral::Data.false?(args[0])
+      value = Coral::Util::Data.false?(args[0])
     end
     return value
   end

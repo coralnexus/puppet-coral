@@ -8,6 +8,9 @@ module Puppet::Parser::Functions
 This function returns the Coral configurations processed so far.
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     return Coral::Config.properties
   end
 end

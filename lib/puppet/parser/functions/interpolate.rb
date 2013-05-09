@@ -8,8 +8,11 @@ module Puppet::Parser::Functions
 This function interpolates values from one hash to another for configuration injections.
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "interpolate(): Define at least a property name with optional source configurations " +
         "given (#{args.size} for 2)") if args.size < 1
       
@@ -18,7 +21,7 @@ This function interpolates values from one hash to another for configuration inj
       options = ( args.size > 2 ? args[2] : {} )
     
       config = Coral::Config.new(options)
-      value = Coral::Data.interpolate(value, data, config)
+      value = Coral::Util::Data.interpolate(value, data, config)
     end
     return value
   end

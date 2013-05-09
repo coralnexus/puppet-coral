@@ -20,7 +20,10 @@ This function adds resource definitions of a specific type to the Puppet catalog
 If no resources are found, it returns without creating anything.
     EOS
 ) do |args|
-    Coral.backtrace do
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
+    Coral.run do
       raise(Puppet::ParseError, "coral_resources(): Define at least the resource type and optional variable name " +
         "given (#{args.size} for 1)") if args.size < 1
       
@@ -40,8 +43,8 @@ If no resources are found, it returns without creating anything.
         :resource_prefix => tag,
         :title_prefix    => tag
       })
-      resources      = Coral::Data.normalize(var_name, override_var, config)
-      default_values = Coral::Data.normalize(default_values, default_var, config) 
+      resources      = Coral::Util::Data.normalize(var_name, override_var, config)
+      default_values = Coral::Util::Data.normalize(default_values, default_var, config) 
     
       #dbg(resources, 'resources -> init')
       #dbg(default_values, 'default_values -> init')
@@ -51,7 +54,7 @@ If no resources are found, it returns without creating anything.
         #dbg(resources, 'resources -> entry')
         resources.each do |name, data|
           unless data.empty?
-            resources[name] = Coral::Resource.render(Coral::Data.merge([ default_values, data ], config), config)
+            resources[name] = Coral::Resource.render(Coral::Util::Data.merge([ default_values, data ], config), config)
           
             unless tag.empty?
               if ! data.has_key?('tag')

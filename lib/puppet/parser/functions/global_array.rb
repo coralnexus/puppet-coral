@@ -10,8 +10,11 @@ See: global_params()
 If no value is found in the defined sources, it returns an empty array ([])
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "global_array(): Define at least the variable name " +
         "given (#{args.size} for 1)") if args.size < 1
     

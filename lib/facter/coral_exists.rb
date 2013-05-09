@@ -4,7 +4,7 @@ Facter.add(:coral_exists) do
     coral_exists = false
     
     begin
-      Facter::Util::Resolution::exec('gem list coral -i 2> /dev/null')
+      Facter::Util::Resolution::exec('gem list coral_core -i 2> /dev/null')
       
       if $?.exitstatus == 0
         coral_exists = true

@@ -8,8 +8,11 @@ module Puppet::Parser::Functions
 This function returns the string-ified form of a given value.
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "render(): Must have a template class name and a source value specified; " +
         "given (#{args.size} for 2)") if args.size < 2
     

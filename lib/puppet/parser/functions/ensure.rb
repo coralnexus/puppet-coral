@@ -8,8 +8,11 @@ module Puppet::Parser::Functions
 This function checks a given test and returns the success value or a failure value based on test results.
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "ensure(): Must have at least a test and optional success and failure values specified; " +
         "given (#{args.size} for 1)") if args.size < 1
       
@@ -17,7 +20,7 @@ This function checks a given test and returns the success value or a failure val
       success_value = (args.size > 1 ? args[1] : test)
       failure_value = (args.size > 2 ? args[2] : '')
       
-      if Coral::Data.undef?(test) || Coral::Data.false?(test) || (test.respond_to?('empty?') && test.empty?)
+      if Coral::Util::Data.empty?(test)
         value = failure_value
       else
         value = success_value

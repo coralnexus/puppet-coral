@@ -18,7 +18,10 @@ This function performs a lookup for a variable value in various locations follow
 If no value is found in the defined sources, it does not include any classes.
     EOS
 ) do |args|
-    Coral.backtrace do
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
+    Coral.run do
       raise(Puppet::ParseError, "coral_include(): Define at least the variable name " +
         "given (#{args.size} for 1)") if args.size < 1
 

@@ -8,12 +8,15 @@ module Puppet::Parser::Functions
 This function Merges multiple hashes together recursively.
     EOS
 ) do |args|
+    Puppet::Parser::Functions.autoloader.loadall
+    function_coral_initialize([])
+    
     value = nil
-    Coral.backtrace do
+    Coral.run do
       raise(Puppet::ParseError, "deep_merge(): Define at least one hash " +
         "given (#{args.size} for 1)") if args.size < 1
       
-      value = Coral::Data.merge(args)
+      value = Coral::Util::Data.merge(args)
     end
     return value
   end

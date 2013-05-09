@@ -1,4 +1,4 @@
-## coraltech-coral module
+## coralnexus-coral
 
 ## Overview
 
@@ -13,4 +13,4 @@ general security procedures and tools on a server, among the most important
 functions are creating an extensible firewall rule system and a locked down
 default.
 
-TODO: Configuration template engine
+TODO: Update this README as the stuff above is a bit outdated...

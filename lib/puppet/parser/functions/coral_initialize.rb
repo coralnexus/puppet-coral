@@ -12,11 +12,14 @@ This function loads all of the Coral Ruby library files and, if requested,
  processing and translation of string data coming in from Hiera.
     EOS
 ) do |args|
-    begin
-      require 'coral_core'
+        
+    unless defined?(Coral)
+      begin
+        require 'coral_core'
        
-    rescue LoadError
-      require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core.rb')
-    end
+      rescue LoadError
+        require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core.rb')
+      end
+    end    
   end
 end

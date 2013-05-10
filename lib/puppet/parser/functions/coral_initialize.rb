@@ -16,7 +16,7 @@ This function loads all of the Coral Ruby library files and, if requested,
       require 'coral_core'
        
     rescue LoadError
-      require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core.rb')
+      require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core_basic.rb')
     end
   end
 end

@@ -40,7 +40,8 @@ If no value is found in the defined sources, it returns an empty string ('')
     
       if value.nil?
         value = default_value
-      else
+        
+      elsif ! Coral::Util::Data.empty?(default_value)
         context = config.get(:context, false)
         if context && (context == :array || context == :hash)
           value = Coral::Util::Data.merge([default_value, value], config)

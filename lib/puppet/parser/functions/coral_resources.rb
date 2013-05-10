@@ -43,8 +43,8 @@ If no resources are found, it returns without creating anything.
         :resource_prefix => tag,
         :title_prefix    => tag
       })
-      resources      = Coral::Util::Data.normalize(var_name, override_var, config)
-      default_values = Coral::Util::Data.normalize(default_values, default_var, config) 
+      resources      = Coral::Config.normalize(var_name, override_var, config)
+      default_values = Coral::Config.normalize(default_values, default_var, config) 
     
       #dbg(resources, 'resources -> init')
       #dbg(default_values, 'default_values -> init')

@@ -13,10 +13,10 @@ This function loads all of the Coral Ruby library files and, if requested,
     EOS
 ) do |args|
     begin
-      require 'coral_core'  
-    rescue
-      lib_dir = File.join(File.dirname(__FILE__), '..', '..', '..')
-      require File.join(lib_dir, 'coral', 'core', 'lib', 'coral_core.rb')  
+      require 'coral_core'
+       
+    rescue LoadError
+      require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core.rb')
     end
   end
 end

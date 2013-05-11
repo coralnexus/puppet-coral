@@ -9,7 +9,7 @@ class coral::params::puppet inherits coral::default {
   $package_names       = module_array('puppet_package_names')
   $extra_package_names = module_array('puppet_extra_package_names')
 
-  $bin = module_param('puppet_bin', '/usr/bin/puppet')
+  $bin = module_param('puppet_bin')
 
   $init_config_file = module_param('puppet_init_config_file')
   $daemon_env       = module_hash('puppet_daemon_env', {

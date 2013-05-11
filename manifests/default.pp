@@ -24,6 +24,8 @@ class coral::default {
 
       $puppet_init_config_file = '/etc/default/puppet'
 
+      $puppet_bin = '/usr/bin/puppet'
+
       # Debian SSH
 
       $ssh_package_names       = ['openssh-server']

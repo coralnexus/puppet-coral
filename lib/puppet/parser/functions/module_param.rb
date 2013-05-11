@@ -33,6 +33,8 @@ If no value is found in the defined sources, it returns an empty string ('')
       module_name      = self.source.module_name
       module_var_name  = "#{module_name}::#{var_name}"
       default_var_name = "#{module_name}::default::#{var_name}"
+      
+      #dbg(args, "params -> #{module_var_name}")
     
       config = Coral::Config.new(options, {
         :scope       => self,
@@ -42,12 +44,15 @@ If no value is found in the defined sources, it returns an empty string ('')
         :force       => true
       })    
       value = Coral::Config.lookup(module_var_name, nil, config)
+      
+      #dbg(value, "param (after lookup) -> #{module_var_name}")
     
-      if value.nil?
+      if Coral::Util::Data.undef?(value)
         value = lookupvar(default_var_name)
-      end
+        #dbg(value, "param (after scope lookup) -> #{module_var_name}")
+      end      
     
-      if value.nil?
+      if Coral::Util::Data.undef?(value)
         value = default_value
         
       elsif ! Coral::Util::Data.empty?(default_value)

@@ -38,7 +38,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       })    
       value = Coral::Config.lookup(var_name, nil, config)
     
-      if value.nil?
+      if Coral::Util::Data.undef?(value)
         value = default_value
         
       elsif ! Coral::Util::Data.empty?(default_value)

@@ -21,7 +21,7 @@ This function interpolates values from one hash to another for configuration inj
       options = ( args.size > 2 ? args[2] : {} )
     
       config = Coral::Config.new(options)
-      value = Coral::Util::Data.interpolate(value, data, config)
+      value = Coral::Util::Data.interpolate(value, data, config.options)
     end
     return value
   end

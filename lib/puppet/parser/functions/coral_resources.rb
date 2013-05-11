@@ -49,27 +49,32 @@ If no resources are found, it returns without creating anything.
       #dbg(resources, 'resources -> init')
       #dbg(default_values, 'default_values -> init')
       resources = Coral::Resource.normalize(definition_name, resources, config)
-    
-      if resources && ! resources.empty?
-        #dbg(resources, 'resources -> entry')
+      
+      unless Coral::Util::Data.empty?(resources)
         resources.each do |name, data|
           unless data.empty?
-            resources[name] = Coral::Resource.render(Coral::Util::Data.merge([ default_values, data ], config), config)
+            #dbg(data, 'data for merge')
+            resource = Coral::Util::Data.merge([ default_values, data ], config)
+            #dbg(resource, 'resource after merge')
+            resource = Coral::Resource.render(resource, config)
+            #dbg(resource, 'post rendered resource')
           
             unless tag.empty?
               if ! data.has_key?('tag')
-                resources[name]['tag'] = tag
+                resource['tag'] = tag
               else
                 resource_tags = data['tag']
                 case resource_tags
                 when Array
-                  resources[name]['tag'] << tag  
+                  resource['tag'] << tag  
                 when String
                   resource_tags = resource_tags.split(/\s*,\s*/).push(tag)
-                  resources[name]['tag'] = resource_tags
+                  resource['tag'] = resource_tags
                 end
               end
             end
+            resources[name] = resource
+            #dbg(resources, 'resources after assignment')
           end
         end
         #dbg(resources, 'resources -> pre-translate')

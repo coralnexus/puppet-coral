@@ -1,5 +1,6 @@
 
 class coral::stage::runtime {
+
   $base_name = $coral::params::base_name
   $stage_name = $coral::params::runtime_name
 

@@ -1,6 +1,7 @@
 
 class coral::stage::deploy {
-  $base_name = $coral::params::base_name
+
+  $base_name  = $coral::params::base_name
   $stage_name = $coral::params::deploy_name
 
   #-----------------------------------------------------------------------------

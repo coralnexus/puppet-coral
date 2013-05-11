@@ -1,5 +1,6 @@
 
 class coral::stage::setup {
+
   $base_name = $coral::params::base_name
   $stage_name = $coral::params::setup_name
 

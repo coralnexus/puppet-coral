@@ -62,7 +62,7 @@ class coral::params::puppet inherits coral::default {
     })
   ])
 
-  $hiera_hierarchy  = module_array('hiera_hierarchy', [ '%{::hostname}', '%{::environment}', 'common' ])
+  $hiera_hierarchy  = module_array('hiera_hierarchy', 'common')
   $hiera_merge_type = module_param('hiera_merge_type', 'deeper')
 
   $service_name    = module_param('puppet_service_name', 'puppet')

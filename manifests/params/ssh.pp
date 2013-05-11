@@ -46,7 +46,7 @@ class coral::params::ssh inherits coral::default {
     'Subsystem'                       => 'sftp /usr/lib/openssh/sftp-server',
     'UsePAM'                          => 'yes',
     'UseDNS'                          => 'no',
-    'AllowGroups'                     => [ 'root', 'admin', 'vagrant' ]
+    'AllowGroups'                     => [ 'root', 'vagrant' ]
   })
   $port = interpolate($config['Port'], $config)
 

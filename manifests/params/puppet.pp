@@ -32,8 +32,6 @@ class coral::params::puppet inherits coral::default {
       templatedir           => '$confdir/templates',
       manifestdir           => '$confdir/manifests',
       manifest              => '$manifestdir/site.pp',
-      prerun_command        => '$confdir/etckeeper-commit-pre',
-      postrun_command       => '$confdir/etckeeper-commit-post',
       modulepath            => '$confdir/modules',
       report                => true,
       reportdir             => '$logdir/reports',

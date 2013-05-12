@@ -18,13 +18,17 @@ This function checks a given test and returns the success value or a failure val
       
       test          = args[0]
       success_value = (args.size > 1 ? args[1] : test)
-      failure_value = (args.size > 2 ? args[2] : '')
+      failure_value = (args.size > 2 ? args[2] : :undef)
+      
+      #dbg(test, 'test')
+      #dbg(success_value, 'success')
       
       if Coral::Util::Data.empty?(test)
         value = failure_value
       else
         value = success_value
       end
+      #dbg(value, 'value')
     end
     return value
   end

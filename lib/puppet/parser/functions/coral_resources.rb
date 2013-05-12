@@ -80,7 +80,7 @@ If no resources are found, it returns without creating anything.
         #dbg(resources, 'resources -> pre-translate')
         resources = Coral::Resource.translate(definition_name, resources, config)
         
-        #dbg(resources, 'resources -> result')
+        #dbg(resources, "#{definition_name} -> result")
         function_coral_create_resources([ definition_name, resources ])
       end
     end

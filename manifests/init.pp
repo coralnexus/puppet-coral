@@ -114,7 +114,6 @@ class coral inherits coral::params {
 
   class { 'coral::stage::setup': stage => 'setup' }
   class { 'coral::stage::runtime': stage => 'runtime' }
-  class { 'coral::stage::deploy': stage => 'deploy' }
 
   #---
 
@@ -149,13 +148,6 @@ class coral inherits coral::params {
       vagrant_env => {
         path    => $coral::params::vagrant_env_file,
         ensure  => 'absent'
-      },
-      property_dir => {
-        path   => $coral::params::generate_properties ? { true => $coral::params::property_dir, default => '' },
-        ensure => 'directory',
-        owner  => $coral::params::property_owner,
-        group  => $coral::params::property_group,
-        mode   => $coral::params::property_dir_mode
       }
     }
   }

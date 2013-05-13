@@ -1,8 +1,6 @@
 
 class coral::params inherits coral::default {
 
-  $time = time()
-
   # Names
 
   $base_name     = 'coral'
@@ -21,17 +19,8 @@ class coral::params inherits coral::default {
 
   $setup_name    = "${base_name}_setup"
   $runtime_name  = "${base_name}_runtime"
-  $deploy_name   = "${base_name}_deploy"
 
   # Common
-
-  $generate_properties = module_param('generate_properties', true)
-  $property_file       = module_param('property_file', "config.${::operatingsystem}.${time}.json")
-  $property_dir        = module_param('property_dir', '/var/log/coral')
-  $property_dir_mode   = module_param('property_dir_mode', '0744')
-  $property_file_mode  = module_param('property_file_mode', '0744')
-  $property_owner      = module_param('property_owner', 'root')
-  $property_group      = module_param('property_group', 'admin')
 
   $apt_always_apt_update    = module_param('apt_always_apt_update', false)
   $apt_disable_keys         = module_param('apt_disable_keys', false)

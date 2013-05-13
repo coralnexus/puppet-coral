@@ -11,7 +11,7 @@ class coral::default {
       # Debian Ruby
 
       $ruby_package_names       = ['ruby1.9.1', 'ruby1.9.1-dev']
-      $ruby_extra_package_names = ['rubygems1.9.1']
+      $ruby_extra_package_names = []
 
       $ruby_exec     = '/usr/bin/ruby1.9.1'
       $rubygems_exec = '/usr/bin/gem1.9.1'

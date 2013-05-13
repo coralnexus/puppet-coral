@@ -26,7 +26,8 @@ If no value is found in the defined sources, it does not include any classes.
         "given (#{args.size} for 1)") if args.size < 1
 
       var_name = args[0]
-      classes  = function_global_array([ var_name, [], args[1] ])
+      options  = ( args.size > 1 ? args[1] : {} ) 
+      classes  = function_global_array([ var_name, [], options ])
     
       if ! classes.empty?
         function_hiera_include([ classes ])

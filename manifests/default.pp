@@ -15,7 +15,7 @@ class coral::default {
 
       $ruby_exec     = '/usr/bin/ruby1.9.1'
       $rubygems_exec = '/usr/bin/gem1.9.1'
-      $gem_home      = '/var/lib/gems/1.9'
+      $gem_home      = '/var/lib/gems/1.9.1'
 
       # Debian Puppet
 

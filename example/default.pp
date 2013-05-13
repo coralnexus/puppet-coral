@@ -15,14 +15,14 @@
  * top level project directories, such as a profiles directory or a project
  * level modules directory.
  */
-class coral::default {
+class global::default {
 
 }
 
 # This assumes we have created a default directory which contains all of our
 # default configurations.
 import "default/*.pp"
-include coral::default::coral # This module's default configurations
+include global::default::coral # This module's default configurations
 
 # Each module that has project level default configurations should be
 # included below:

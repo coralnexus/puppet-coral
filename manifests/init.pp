@@ -79,7 +79,7 @@ class coral inherits coral::params {
 
   #---
 
-  coral_options('log', {
+  module_options('log', {
     config_log => $coral::params::property_path
   })
   include coral::system::log

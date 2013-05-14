@@ -72,10 +72,17 @@ class coral inherits coral::params {
 
   $base_name = $coral::params::base_name
 
+  #---
+
   include stdlib
   include firewall
 
   #---
+
+  coral_options('log', {
+    config_log => $coral::params::property_path
+  })
+  include coral::system::log
 
   # Core systems to get a fully functional Puppet server with security permissions.
 

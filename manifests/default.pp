@@ -43,6 +43,10 @@ class coral::default {
       $sudoers_test_file = '/etc/sudoers.test'
 
       $sudoers_dir = '/etc/sudoers.d'
+
+      # Debian Coral logging
+
+      $log_dir = '/var/log/coral'
     }
   }
 }

@@ -56,4 +56,16 @@ class coral::params inherits coral::default {
   $exec_path  = module_array('exec_path', ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin'])
   $exec_user  = module_param('exec_user', 'root')
   $exec_group = module_param('exec_group', 'root')
+
+  # Logging
+
+  $config_template    = module_param('config_template', 'Configuration')
+
+  $log_dir            = module_param('log_dir')
+  $log_dir_mode       = module_param('log_dir_mode', '0744')
+  $property_file      = module_param('property_file', 'common.json')
+  $property_file_mode = module_param('property_file_mode', '0744')
+  $property_path      = "${log_dir}/${property_file}"
+  $log_owner          = module_param('log_owner', 'root')
+  $log_group          = module_param('log_group', 'admin')
 }

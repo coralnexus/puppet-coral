@@ -20,7 +20,7 @@ This function returns the string-ified form of a given value.
       data       = ( args.size > 1 ? args[1] : {} )
       options    = ( args.size > 2 ? args[2] : {} )
     
-      contexts = Coral::Util::Data.prefix(self.source.module_name, [ 'data', 'render' ])
+      contexts = function_option_contexts([ 'data', 'render' ])
       config   = Coral::Config.init(options, contexts, {
         :scope  => self,
         :search => 'global::default'  

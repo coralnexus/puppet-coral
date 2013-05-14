@@ -20,7 +20,7 @@ This function interpolates values from one hash to another for configuration inj
       data    = ( args.size > 1 ? args[1] : {} )
       options = ( args.size > 2 ? args[2] : {} )
       
-      contexts = Coral::Util::Data.prefix(self.source.module_name, [ 'data', 'interpolate' ])    
+      contexts = function_option_contexts([ 'data', 'interpolate' ])    
       config   = Coral::Config.init(options, contexts)
       value    = Coral::Util::Data.interpolate(value, data, config.options)
     end

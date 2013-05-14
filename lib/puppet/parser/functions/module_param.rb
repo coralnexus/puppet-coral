@@ -36,7 +36,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       
       #dbg(args, "params -> #{module_var_name}")
     
-      contexts = Coral::Util::Data.prefix(module_name, [ 'param', 'module_param' ])
+      contexts = function_option_contexts([ 'param', 'module_param' ])
       config   = Coral::Config.init(options, contexts, {
         :scope       => self,
         :init_fact   => 'hiera_ready',

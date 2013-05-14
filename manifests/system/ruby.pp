@@ -71,7 +71,7 @@ class coral::system::ruby inherits coral::params::ruby {
       gem_active => {
         command     => $coral::params::ruby::gem_set_active_command,
         refreshonly => true,
-        subscribe   => Coral::Package["${system_name}_extra"]
+        subscribe   => Coral::Package["${system_name}_core"]
       }
     }
   }

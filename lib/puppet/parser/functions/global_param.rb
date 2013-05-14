@@ -30,12 +30,13 @@ If no value is found in the defined sources, it returns an empty string ('')
       default_value = ( args.size > 1 ? args[1] : '' )
       options       = ( args.size > 2 ? args[2] : {} )
     
-      config = Coral::Config.new(options, {
+      contexts = Coral::Util::Data.prefix(self.source.module_name, [ 'param', 'global_param' ]) 
+      config   = Coral::Config.init(options, contexts, {
         :scope     => self,
         :search    => 'global::default',
         :init_fact => 'hiera_ready',
         :force     => true
-      })    
+      })         
       value = Coral::Config.lookup(var_name, nil, config)
     
       if Coral::Util::Data.undef?(value)

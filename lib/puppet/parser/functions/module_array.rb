@@ -21,9 +21,10 @@ If no value is found in the defined sources, it returns an empty array ([])
       var_name      = args[0]
       default_value = ( args.size > 1 ? args[1] : [] )
       options       = ( args.size > 2 ? args[2] : {} )
-    
-      config = Coral::Config.new(options).set(:context, :array)
-      value = function_module_param([ var_name, default_value, config.options ])
+
+      contexts = Coral::Util::Data.prefix(self.source.module_name, [ 'param', 'module_array' ])    
+      config   = Coral::Config.init(options, contexts).set(:context, :array)
+      value    = function_module_param([ var_name, default_value, config.options ])
     end
     return value
   end

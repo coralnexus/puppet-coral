@@ -13,14 +13,15 @@ This function returns the string-ified form of a given value.
     
     value = nil
     Coral.run do
-      raise(Puppet::ParseError, "render(): Must have a template class name and a source value specified; " +
-        "given (#{args.size} for 2)") if args.size < 2
+      raise(Puppet::ParseError, "render(): Must have a template class name and an optional source value specified; " +
+        "given (#{args.size} for 2)") if args.size < 1
     
       class_name = args[0]  
-      data       = args[1]
-      options    = ( args[2] ? args[2] : {} )
+      data       = ( args.size > 1 ? args[1] : {} )
+      options    = ( args.size > 2 ? args[2] : {} )
     
-      config = Coral::Config.new(options, {
+      contexts = Coral::Util::Data.prefix(self.source.module_name, [ 'data', 'render' ])
+      config   = Coral::Config.init(options, contexts, {
         :scope  => self,
         :search => 'global::default'  
       })

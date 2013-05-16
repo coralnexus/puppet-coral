@@ -50,6 +50,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       end
     
       Coral::Config.set_property(var_name, value)
+      #dbg(value, "param -> #{var_name}")
     end
     return value
   end

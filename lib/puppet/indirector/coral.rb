@@ -4,7 +4,7 @@ require 'puppet/indirector/terminus'
 class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
   
   def initialize(*args)
-    if ! Coral::Config.initialized?
+    unless Coral::Config.initialized?
       raise "Coral terminus not supported without the Coral library"
     end
     super
@@ -13,13 +13,18 @@ class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
   #---
 
   def find(request)
-    config = Coral::Config.new({
+    dbg(request.key, 'data binding key')
+        
+    config = Coral::Config.init({}, [ 'all', 'param', 'data_binding' ], {
       :scope       => request.options[:variables],
       :init_fact   => 'hiera_ready',
-      :search      => 'global::default',
+      :search      => 'core::default',
       :search_name => false,
       :force       => true
-    }) 
-    return Coral::Config.lookup(request.key, nil, config)
+    })    
+    #dbg(config, 'config')
+    
+    value = Coral::Config.lookup(request.key, nil, config)
+    #dbg(value, 'value')
   end
 end

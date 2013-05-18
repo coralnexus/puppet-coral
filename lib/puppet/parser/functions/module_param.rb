@@ -64,7 +64,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       end
     
       Coral::Config.set_property(module_var_name, value)
-      dbg(value, "module param -> #{module_var_name}")
+      #dbg(value, "module param -> #{module_var_name}")
     end
     return value
   end

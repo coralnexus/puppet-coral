@@ -14,12 +14,12 @@ This function loads all of the Coral Ruby library files and, if requested,
 ) do |args|
         
     unless defined?(Coral)
-      #begin
-      #  require 'coral_core'
+      begin
+        require 'coral_core'
        
-      #rescue LoadError
+      rescue LoadError
         require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core.rb')
-      #end
+      end
     end    
   end
 end

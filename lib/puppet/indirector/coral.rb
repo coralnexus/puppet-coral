@@ -5,7 +5,7 @@ class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
   
   def initialize(*args)
     unless Coral::Config.initialized?
-      raise "Coral terminus not supported without the Coral library"
+      #raise "Coral terminus not supported without the Coral library"
     end
     super
   end
@@ -13,7 +13,7 @@ class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
   #---
 
   def find(request)
-    dbg(request.key, 'data binding key')
+    #dbg(request.key, 'data binding key')
         
     config = Coral::Config.init({}, [ 'all', 'param', 'data_binding' ], {
       :scope       => request.options[:variables],

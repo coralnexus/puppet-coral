@@ -34,8 +34,6 @@ If no value is found in the defined sources, it returns an empty string ('')
       module_var_name  = "#{module_name}::#{var_name}"
       default_var_name = "#{module_name}::default::#{var_name}"
       
-      #dbg(args, "params -> #{module_var_name}")
-    
       contexts = function_option_contexts([ 'param', 'module_param' ])
       config   = Coral::Config.init(options, contexts, {
         :scope       => self,
@@ -43,14 +41,13 @@ If no value is found in the defined sources, it returns an empty string ('')
         :search      => 'core::default',
         :search_name => false,
         :force       => true
-      })    
+      })
+      debug = config.get(:debug, false)
+         
       value = Coral::Config.lookup(module_var_name, nil, config)
       
-      #dbg(value, "param (after lookup) -> #{module_var_name}")
-    
       if Coral::Util::Data.undef?(value)
         value = lookupvar(default_var_name)
-        #dbg(value, "param (after scope lookup) -> #{module_var_name}")
       end      
     
       if Coral::Util::Data.undef?(value)
@@ -64,7 +61,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       end
     
       Coral::Config.set_property(module_var_name, value)
-      #dbg(value, "module param -> #{module_var_name}")
+      dbg(value, "module param -> #{module_var_name}") if debug
     end
     return value
   end

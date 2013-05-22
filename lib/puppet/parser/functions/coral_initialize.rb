@@ -14,7 +14,7 @@ This function loads all of the Coral Ruby library files and, if requested,
 ) do |args|
         
     unless defined?(Coral)
-      use_gem = true
+      use_gem = false
       
       if use_gem
         begin

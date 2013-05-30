@@ -2,7 +2,7 @@
 class coral::params::puppet inherits coral::default {
 
   $apt_location   = module_param('puppet_apt_location', 'http://apt.puppetlabs.com')
-  $apt_repos      = module_param('puppet_apt_repos', 'main')
+  $apt_repos      = module_param('puppet_apt_repos', 'main dependencies')
   $apt_key        = module_param('puppet_apt_key', '4BD6EC30')
   $apt_key_server = module_param('puppet_apt_key_server', 'pgp.mit.edu')
 

@@ -1,5 +1,5 @@
 ---
-:merge_behavior: <%= hiera_merge_type %>
+:merge_behavior: <%= @hiera_merge_type %>
 :hierarchy:
 <% hiera_hierarchy.each do |level| -%>
     - <%= level %>

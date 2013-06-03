@@ -5,7 +5,7 @@ class coral::default {
     debian, ubuntu : {
       # Debian Common
 
-      $build_package_names  = ['build-essential', 'libnl-dev', 'libpopt-dev', 'libxml2-dev', 'libssl-dev', 'libcurl4-openssl-dev']
+      $build_package_names  = ['build-essential', 'libnl-dev', 'libpopt-dev', 'libxml2-dev', 'libssl-dev', 'libcurl4-openssl-dev', 'libxslt1-dev']
       $common_package_names = ['vim', 'unzip', 'curl']
 
       # Debian Ruby

@@ -33,10 +33,12 @@ If no value is found in the defined sources, it returns an empty string ('')
       contexts = function_option_contexts([ 'param', 'global_param' ]) 
       config   = Coral::Config.init(options, contexts, {
         :scope     => self,
-        :search    => 'global::default',
+        :search    => 'core::default',
         :init_fact => 'hiera_ready',
         :force     => true
-      })         
+      })
+      debug = config.get(:debug, false)
+               
       value = Coral::Config.lookup(var_name, nil, config)
     
       if Coral::Util::Data.undef?(value)
@@ -50,7 +52,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       end
     
       Coral::Config.set_property(var_name, value)
-      #dbg(value, "param -> #{var_name}")
+      dbg(value, "global param -> #{var_name}") if debug
     end
     return value
   end

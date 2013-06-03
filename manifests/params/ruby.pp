@@ -7,7 +7,7 @@ class coral::params::ruby inherits coral::default {
   $ruby_exec     = module_param('ruby_exec')
   $rubygems_exec = module_param('rubygems_exec')
 
-  $gem_names  = module_array('gem_names', ['libshadow', 'coral', 'deep_merge', 'puppet-module', 'hiera-json'])
+  $gem_names  = module_array('gem_names', ['libshadow', 'coral', 'deep_merge', 'puppet-module', 'hiera', 'hiera-json'])
   $gem_ensure = module_param('gem_ensure', 'latest')
 
   $env_file = module_param('ruby_env_file', '/etc/profile.d/ruby.sh')

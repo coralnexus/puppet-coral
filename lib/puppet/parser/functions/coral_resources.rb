@@ -44,21 +44,24 @@ If no resources are found, it returns without creating anything.
         :resource_prefix => tag,
         :title_prefix    => tag
       })
+      debug = config.get(:debug, false)
+      
       resources      = Coral::Config.normalize(var_name, override_var, config)
       default_values = Coral::Config.normalize(default_values, default_var, config) 
     
-      #dbg(resources, 'resources -> init')
-      #dbg(default_values, 'default_values -> init')
+      dbg(resources, 'resources -> init') if debug
+      dbg(default_values, 'default_values -> init') if debug
       resources = Coral::Resource.normalize(definition_name, resources, config)
       
       unless Coral::Util::Data.empty?(resources)
         resources.each do |name, data|
           unless data.empty?
-            #dbg(data, 'data for merge')
+            dbg(data, 'data for merge') if debug
             resource = Coral::Util::Data.merge([ default_values, data ], config)
-            #dbg(resource, 'resource after merge')
+            dbg(resource, 'resource after merge') if debug
+            
             resource = Coral::Resource.render(resource, config)
-            #dbg(resource, 'post rendered resource')
+            dbg(resource, 'post rendered resource') if debug
           
             unless tag.empty?
               if ! data.has_key?('tag')
@@ -75,13 +78,13 @@ If no resources are found, it returns without creating anything.
               end
             end
             resources[name] = resource
-            #dbg(resources, 'resources after assignment')
+            dbg(resources, 'resources after assignment') if debug
           end
         end
-        #dbg(resources, 'resources -> pre-translate')
+        dbg(resources, 'resources -> pre-translate') if debug
         resources = Coral::Resource.translate(definition_name, resources, config)
         
-        #dbg(resources, "#{definition_name} -> result")
+        dbg(resources, "#{definition_name} -> result") if debug
         function_coral_create_resources([ definition_name, resources ])
       end
     end

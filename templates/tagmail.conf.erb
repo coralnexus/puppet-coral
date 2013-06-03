@@ -1,4 +1,4 @@
-<% report_emails.each do |email_address, tags| -%>
+<% @report_emails.each do |email_address, tags| -%>
 <% if tags.is_a? Array -%>
 <%= tags.flatten.join(', ') -%>: <%= email_address %>  
 <% else -%>

@@ -1,9 +1,14 @@
 
 define coral::include (
 
-  $class   = $name,
-  $options = {}
+  $classes    = $name,
+  $parameters = {},
+  $options    = {}
 
 ) {
-  coral_include($class, $options)
+
+  anchor { $name: }
+
+  $merged_parameters = deep_merge({ require => Anchor[$name] }, $parameters)
+  coral_include($classes, $merged_parameters, $options)
 }

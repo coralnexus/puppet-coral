@@ -23,7 +23,7 @@ This function returns the string-ified form of a given value.
       contexts = function_option_contexts([ 'data', 'render' ])
       config   = Coral::Config.init(options, contexts, {
         :scope  => self,
-        :search => 'global::default'  
+        :search => 'core::default'  
       })
       value = Coral::Template.render(class_name, data, config)
     end

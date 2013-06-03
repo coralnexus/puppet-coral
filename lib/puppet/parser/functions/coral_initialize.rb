@@ -14,11 +14,19 @@ This function loads all of the Coral Ruby library files and, if requested,
 ) do |args|
         
     unless defined?(Coral)
-      begin
-        require 'coral_core'
+      use_gem = false
+      
+      if use_gem
+        begin
+          require 'coral_core'
        
-      rescue LoadError
-        require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core.rb')
+        rescue LoadError
+          use_gem = false
+        end
+      end
+      
+      unless use_gem
+        require File.join(File.dirname(__FILE__), '..', '..', '..', 'coral', 'core', 'lib', 'coral_core.rb')  
       end
     end    
   end

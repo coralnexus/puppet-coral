@@ -1,16 +1,9 @@
-## coralnexus-coral
+IMPORTANT: This branch has been depreciated with the inclusion of the 
+coral core system.  Branches correspond to the equivalent branches in
+the coral core project.
 
-## Overview
+See: http://github.com/coralnexus/ruby-coral_core
 
-General purpose Puppet framework that focuses on extensibility and
-compatibility between 2.x / 3.x and Hiera / non-Hiera systems.
+Try checking out one of the {MAJOR}.{MINOR} branches.
 
-This module provides a core framework for building and utilizing other
-Puppet modules.  It also installs misc packages and utilities that do not
-fit neatly into specialized bundles and creates and manages custom Facter
-facts that are loaded through the user environment.  Finally it manages the
-general security procedures and tools on a server, among the most important
-functions are creating an extensible firewall rule system and a locked down
-default.
-
-TODO: Update this README as the stuff above is a bit outdated...
+$> git checkout {MAJOR}.{MINOR}

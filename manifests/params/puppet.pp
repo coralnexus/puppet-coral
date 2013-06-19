@@ -70,5 +70,5 @@ class coral::params::puppet inherits coral::default {
   $cron_user          = module_param('puppet_cron_user', 'root')
   $update_interval    = module_param('puppet_update_interval', '*/30')
   $update_environment = module_param('puppet_update_environment', 'PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin')
-  $update_command     = module_param('puppet_update_command', "${bin} apply '${manifest}'")
+  $update_command     = module_param('puppet_update_command', "sudo ${bin} apply '${manifest}'")
 }

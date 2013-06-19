@@ -67,5 +67,5 @@ class coral::params inherits coral::default {
   $property_file_mode = module_param('property_file_mode', '0744')
   $property_path      = "${log_dir}/${property_file}"
   $log_owner          = module_param('log_owner', 'root')
-  $log_group          = module_param('log_group', 'admin')
+  $log_group          = module_param('log_group', 'root')
 }

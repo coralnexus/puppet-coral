@@ -1,3 +1,0 @@
-[submodule "lib/coral/core"]
-	path = lib/coral/core
-	url = git://github.com/coralnexus/ruby-coral_core.git

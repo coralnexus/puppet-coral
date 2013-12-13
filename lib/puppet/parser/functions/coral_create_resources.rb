@@ -1,4 +1,4 @@
-Puppet::Parser::Functions::newfunction(:coral_create_resources, :arity => -3, :doc => <<-'ENDHEREDOC') do |args|
+Puppet::Parser::Functions::newfunction(:coral_create_resources, :arity => -4, :doc => <<-'ENDHEREDOC') do |args|
 NOTE:  This function is a backport of the 3.1 branch create_resources function
 that supports virtual resource creation, which we use.  This function allows the
 Coral module to utilize this functionality within the 2.x Puppet versions.
@@ -47,7 +47,7 @@ The $myusers may be declared as virtual resources using:
 create_resources("@user", $myusers)
 
 ENDHEREDOC
-  raise ArgumentError, ("coral_create_resources(): wrong number of arguments (#{args.length}; must be 2 or 3)") if args.length > 3
+  raise ArgumentError, ("coral_create_resources(): wrong number of arguments (#{args.length}; must be 2 to 4)") if args.length > 4
 
   # figure out what kind of resource we are
   type_of_resource = nil
@@ -71,28 +71,34 @@ ENDHEREDOC
       raise ArgumentError, "could not create resource of unknown type #{type_name}"
     end
   end
-  #dbg(args[1], 'coral_create_resources -> resources')
-  
+    
   # iterate through the resources to create
   defaults = args[2] || {}
+  debug    = args[3] || false
+  
+  dbg(args[1], 'coral_create_resources -> resources') if debug
+  
   args[1].each do |title, params|
-    #dbg(title, 'title')
+    dbg(title, 'title') if debug
+    
     params = Puppet::Util.symbolizehash(defaults.merge(params))
     raise ArgumentError, 'params should not contain title' if(params[:title])
-    #dbg(params, 'params')
+    dbg(params, 'params') if debug
+    
     case type_of_resource
     # JJM The only difference between a type and a define is the call to instantiate_resource
     # for a defined type.
     when :type, :define
-      #dbg(resource, 'resource (type | define)')
+      dbg(resource, 'resource (type | define)') if debug
       p_resource = Puppet::Parser::Resource.new(type_name, title, :scope => self, :source => resource)
       p_resource.virtual = type_virtual
       p_resource.exported = type_exported
       
       namevar = Coral::Resource.namevar(type_name, title).to_sym
-      #dbg(namevar, "#{type_name} -> namevar")
+      dbg(namevar, "#{type_name} -> namevar") if debug
+      
       resource_name = params.has_key?(namevar) ? params[namevar] : title
-      #dbg(resource_name, "resource name")
+      dbg(resource_name, "resource name") if debug
       
       {:name => resource_name}.merge(params).each do |k,v|
         p_resource.set_parameter(k,v)
@@ -100,15 +106,17 @@ ENDHEREDOC
       if type_of_resource == :define then
         resource.instantiate_resource(self, p_resource)
       end
-      #dbg(p_resource, 'resource -> final')
+      dbg(p_resource, 'resource -> final') if debug
       compiler.add_resource(self, p_resource)
       
     when :class
-      #dbg(title, 'title')
+      dbg(title, 'title') if debug
       klass = find_hostclass(title)
-      #dbg(klass, 'class')
+      
+      dbg(klass, 'class') if debug
       raise ArgumentError, "could not find hostclass #{title}" unless klass
-      #dbg(params, 'params')
+      
+      dbg(params, 'params') if debug
       klass.ensure_in_catalog(self, params)
       compiler.catalog.add_class(title)
     end

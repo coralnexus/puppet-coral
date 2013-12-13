@@ -85,7 +85,7 @@ If no resources are found, it returns without creating anything.
         resources = Coral::Resource.translate(definition_name, resources, config)
         
         dbg(resources, "#{definition_name} -> result") if debug
-        function_coral_create_resources([ definition_name, resources ])
+        function_coral_create_resources([ definition_name, resources, {}, debug ])
       end
     end
   end

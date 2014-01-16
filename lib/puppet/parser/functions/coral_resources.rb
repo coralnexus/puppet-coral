@@ -39,7 +39,7 @@ If no resources are found, it returns without creating anything.
 
       contexts = function_option_contexts([ 'resource', 'coral_resources' ])          
       config   = Coral::Config.init(options, contexts, {
-        :scope           => self,
+        :puppet_scope    => self,
         :init_fact       => 'hiera_ready',
         :resource_prefix => tag,
         :title_prefix    => tag

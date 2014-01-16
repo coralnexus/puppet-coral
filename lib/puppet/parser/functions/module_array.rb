@@ -24,7 +24,7 @@ If no value is found in the defined sources, it returns an empty array ([])
 
       contexts = function_option_contexts([ 'param', 'module_array' ])    
       config   = Coral::Config.init(options, contexts).set(:context, :array)
-      value    = function_module_param([ var_name, default_value, config.options ])
+      value    = function_module_param([ var_name, default_value, config.export ])
     end
     return value
   end

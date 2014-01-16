@@ -16,16 +16,16 @@ This function returns the string-ified form of a given value.
       raise(Puppet::ParseError, "render(): Must have a template class name and an optional source value specified; " +
         "given (#{args.size} for 2)") if args.size < 1
     
-      class_name = args[0]  
-      data       = ( args.size > 1 ? args[1] : {} )
-      options    = ( args.size > 2 ? args[2] : {} )
+      provider = args[0]  
+      data     = ( args.size > 1 ? args[1] : {} )
+      options  = ( args.size > 2 ? args[2] : {} )
     
       contexts = function_option_contexts([ 'data', 'render' ])
       config   = Coral::Config.init(options, contexts, {
-        :scope  => self,
-        :search => 'core::default'  
+        :puppet_scope => self,
+        :search       => 'core::default'  
       })
-      value = Coral::Template.render(class_name, data, config)
+      value = Coral.template(config, provider).render(data)
     end
     return value
   end

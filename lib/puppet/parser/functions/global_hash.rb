@@ -24,7 +24,7 @@ If no value is found in the defined sources, it returns an empty hash ({})
     
       contexts = function_option_contexts([ 'param', 'global_hash' ]) 
       config   = Coral::Config.init(options, contexts).set(:context, :hash)
-      value    = function_global_param([ var_name, default_value, config.options ])
+      value    = function_global_param([ var_name, default_value, config.export ])
     end
     return value
   end

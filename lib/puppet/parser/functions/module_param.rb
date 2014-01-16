@@ -36,11 +36,11 @@ If no value is found in the defined sources, it returns an empty string ('')
       
       contexts = function_option_contexts([ 'param', 'module_param' ])
       config   = Coral::Config.init(options, contexts, {
-        :scope       => self,
-        :init_fact   => 'hiera_ready',
-        :search      => 'core::default',
-        :search_name => false,
-        :force       => true
+        :puppet_scope => self,
+        :init_fact    => 'hiera_ready',
+        :search       => 'core::default',
+        :search_name  => false,
+        :force        => true
       })
       debug = config.get(:debug, false)
          

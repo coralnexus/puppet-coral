@@ -16,11 +16,11 @@ class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
     #dbg(request.key, 'data binding key')
         
     config = Coral::Config.init({}, [ 'all', 'param', 'data_binding' ], {
-      :scope       => request.options[:variables],
-      :init_fact   => 'hiera_ready',
-      :search      => 'core::default',
-      :search_name => false,
-      :force       => true
+      :hiera_scope  => request.options[:variables],
+      :init_fact    => 'hiera_ready',
+      :search       => 'core::default',
+      :search_name  => false,
+      :force        => true
     })    
     #dbg(config, 'config')
     

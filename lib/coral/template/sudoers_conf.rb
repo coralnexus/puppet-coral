@@ -1,11 +1,12 @@
 
 module Coral
 module Template
-class SudoersConf < Base
+class SudoersConf < Plugin::Template
+  
   #-----------------------------------------------------------------------------
   # Renderers  
     
-  def render(input)
+  def render_processed(input)
     output = defaults(input['defaults']) + "\n" +
               aliases(input['aliases']) + "\n" +
               specs(input['specs'])          

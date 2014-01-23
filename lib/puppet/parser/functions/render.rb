@@ -20,11 +20,13 @@ This function returns the string-ified form of a given value.
       data     = ( args.size > 1 ? args[1] : {} )
       options  = ( args.size > 2 ? args[2] : {} )
     
-      contexts = function_option_contexts([ 'data', 'render' ])
-      config   = Coral::Config.init(options, contexts, {
+      config = Coral::Config.init(options, [ 'data', 'render' ], self.source.module_name, {
         :puppet_scope => self,
         :search       => 'core::default'  
       })
+      dbg(config.export, 'render config')
+      dbg(provider, 'provider')
+      dbg(Coral.template(config, provider), 'template')
       value = Coral.template(config, provider).render(data)
     end
     return value

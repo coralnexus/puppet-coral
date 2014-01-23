@@ -16,7 +16,7 @@ class coral::params::puppet inherits coral::default {
     'DAEMON_OPTS' => ''
   })
 
-  $config_template = module_param('puppet_config_template', 'PuppetConf')
+  $config_template = module_param('puppet_config_template', 'puppet')
 
   # For available options, see: http://docs.puppetlabs.com/references/3.1.latest/configuration.html
   $config = module_hash('puppet_config', {

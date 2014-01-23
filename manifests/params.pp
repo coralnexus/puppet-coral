@@ -37,8 +37,8 @@ class coral::params inherits coral::default {
   $extra_package_names   = module_array('extra_package_names')
   $runtime_package_names = module_array('runtime_package_names')
 
-  $json_template = module_param('json_template', 'JSON')
-  $env_template  = module_param('env_template', 'Environment')
+  $json_template = module_param('json_template', 'json')
+  $env_template  = module_param('env_template', 'environment')
 
   $fact_env_file = module_param('fact_env_file', '/etc/profile.d/facts.sh')
   $facts         = module_hash('facts')
@@ -58,8 +58,6 @@ class coral::params inherits coral::default {
   $exec_group = module_param('exec_group', 'root')
 
   # Logging
-
-  $config_template    = module_param('config_template', 'Configuration')
 
   $log_dir            = module_param('log_dir')
   $log_dir_mode       = module_param('log_dir_mode', '0744')

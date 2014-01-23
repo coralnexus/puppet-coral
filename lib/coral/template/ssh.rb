@@ -1,7 +1,7 @@
 
 module Coral
 module Template
-class SSHConf < Plugin::Template
+class Ssh < Plugin::Template
   
   #-----------------------------------------------------------------------------
   # Renderers  

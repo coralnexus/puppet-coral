@@ -22,9 +22,8 @@ If no value is found in the defined sources, it returns an empty hash ({})
       default_value = ( args.size > 1 ? args[1] : {} )
       options       = ( args.size > 2 ? args[2] : {} )
     
-      contexts = function_option_contexts([ 'param', 'module_hash' ])
-      config   = Coral::Config.init(options, contexts).set(:context, :hash)
-      value    = function_module_param([ var_name, default_value, config.export ])
+      config = Coral::Config.init(options, [ 'param', 'module_hash' ], self.source.module_name).set(:context, :hash)
+      value  = function_module_param([ var_name, default_value, config.export ])
     end
     return value
   end

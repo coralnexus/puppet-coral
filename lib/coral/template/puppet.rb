@@ -1,7 +1,7 @@
 
 module Coral
 module Template
-class PuppetConf < Plugin::Template
+class Puppet < Plugin::Template
   
   #-----------------------------------------------------------------------------
   # Renderers  

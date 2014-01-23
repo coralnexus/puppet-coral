@@ -1,7 +1,7 @@
 
 module Coral
 module Template
-class SudoersConf < Plugin::Template
+class Sudoers < Plugin::Template
   
   #-----------------------------------------------------------------------------
   # Renderers  

@@ -34,8 +34,7 @@ If no value is found in the defined sources, it returns an empty string ('')
       module_var_name  = "#{module_name}::#{var_name}"
       default_var_name = "#{module_name}::default::#{var_name}"
       
-      contexts = function_option_contexts([ 'param', 'module_param' ])
-      config   = Coral::Config.init(options, contexts, {
+      config = Coral::Config.init(options, [ 'param', 'module_param' ], module_name, {
         :puppet_scope => self,
         :init_fact    => 'hiera_ready',
         :search       => 'core::default',

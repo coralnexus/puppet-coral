@@ -9,7 +9,7 @@ class coral::params::ssh inherits coral::default {
   $init_command = module_param('ssh_init_command', "${init_bin} ${init_reload}")
 
   $config_file     = module_param('ssh_config_file')
-  $config_template = module_param('ssh_config_template', 'SSHConf')
+  $config_template = module_param('ssh_config_template', 'ssh')
 
   $config_owner = module_param('ssh_config_owner', 'root')
   $config_group = module_param('ssh_config_group', 'root')

@@ -15,7 +15,7 @@ class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
   def find(request)
     #dbg(request.key, 'data binding key')
         
-    config = Coral::Config.init({}, [ 'all', 'param', 'data_binding' ], {
+    config = Coral::Config.init_flat({}, [ 'all', 'param', 'data_binding' ], {
       :hiera_scope  => request.options[:variables],
       :init_fact    => 'hiera_ready',
       :search       => 'core::default',
@@ -26,5 +26,7 @@ class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
     
     value = Coral::Config.lookup(request.key, nil, config)
     #dbg(value, 'value')
+    
+    value
   end
 end

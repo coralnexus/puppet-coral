@@ -16,8 +16,7 @@ This function checks if Hiera is fully configured and ready to query.
     Coral.run do
       options = ( args[0].is_a?(Hash) ? args[0] : {} )
     
-      contexts = function_option_contexts([ 'init', 'config_initialized' ]) 
-      config   = Coral::Config.init(options, contexts, {
+      config = Coral::Config.init(options, [ 'init', 'config_initialized' ], self.source.module_name, {
         :puppet_scope => self,
         :init_fact    => 'hiera_ready' 
       })        

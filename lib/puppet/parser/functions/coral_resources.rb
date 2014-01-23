@@ -37,8 +37,7 @@ If no resources are found, it returns without creating anything.
       default_var     = tag_var.empty? ? nil : "#{tag_var}::#{type_name}_defaults"
       options         = ( args[4] ? args[4] : {} )
 
-      contexts = function_option_contexts([ 'resource', 'coral_resources' ])          
-      config   = Coral::Config.init(options, contexts, {
+      config = Coral::Config.init(options, [ 'resource', 'coral_resources' ], self.source.module_name, {
         :puppet_scope    => self,
         :init_fact       => 'hiera_ready',
         :resource_prefix => tag,

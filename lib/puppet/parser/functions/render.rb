@@ -24,9 +24,6 @@ This function returns the string-ified form of a given value.
         :puppet_scope => self,
         :search       => 'core::default'  
       })
-      dbg(config.export, 'render config')
-      dbg(provider, 'provider')
-      dbg(Coral.template(config, provider), 'template')
       value = Coral.template(config, provider).render(data)
     end
     return value

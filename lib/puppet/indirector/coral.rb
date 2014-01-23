@@ -22,7 +22,7 @@ class Puppet::Indirector::Coral < Puppet::Indirector::Terminus
       :search_name  => false,
       :force        => true
     })    
-    #dbg(config, 'config')
+    #dbg(config.export, 'config')
     
     value = Coral::Config.lookup(request.key, nil, config)
     #dbg(value, 'value')

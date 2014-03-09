@@ -1,11 +1,12 @@
 
-module Coral
+module CORL
 module Template
-class SudoersConf < Base
+class Sudoersconf < CORL.plugin_class(:template)
+
   #-----------------------------------------------------------------------------
   # Renderers  
     
-  def render(input)
+  def render_processed(input)
     output = defaults(input['defaults']) + "\n" +
               aliases(input['aliases']) + "\n" +
               specs(input['specs'])          

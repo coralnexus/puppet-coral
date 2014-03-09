@@ -1,11 +1,12 @@
 
-module Coral
+module CORL
 module Template
-class SSHConf < Base
+class Sshconf < CORL.plugin_class(:template)
+
   #-----------------------------------------------------------------------------
   # Renderers  
    
-  def render(input)
+  def render_processed(input)
     output = ''
        
     case input      

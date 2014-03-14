@@ -1,5 +1,5 @@
 name 'coralnexus-corl'
-version '0.0.1'
+version '0.4.0'
 
 author 'Adrian Webb'
 license 'ASL 2.0'

@@ -1,5 +1,5 @@
 
-define coral::selboolean (
+define corl::selboolean (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::selboolean (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@selboolean', $data, $defaults, $name, $options)
+  corl_resources('@selboolean', $data, $defaults, $name, $options)
   Selboolean<| tag == $name |>
 }

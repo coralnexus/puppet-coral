@@ -1,5 +1,5 @@
 
-define coral::ssh_authorized_key (
+define corl::ssh_authorized_key (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::ssh_authorized_key (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@ssh_authorized_key', $data, $defaults, $name, $options)
+  corl_resources('@ssh_authorized_key', $data, $defaults, $name, $options)
   Ssh_authorized_key<| tag == $name |>
 }

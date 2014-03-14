@@ -1,5 +1,5 @@
 
-define coral::nagios_serviceextinfo (
+define corl::nagios_serviceextinfo (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_serviceextinfo (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_serviceextinfo', $data, $defaults, $name, $options)
+  corl_resources('@nagios_serviceextinfo', $data, $defaults, $name, $options)
   Nagios_serviceextinfo<| tag == $name |>
 }

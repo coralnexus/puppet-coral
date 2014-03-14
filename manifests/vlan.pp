@@ -1,5 +1,5 @@
 
-define coral::vlan (
+define corl::vlan (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::vlan (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@vlan', $data, $defaults, $name, $options)
+  corl_resources('@vlan', $data, $defaults, $name, $options)
   Vlan<| tag == $name |>
 }

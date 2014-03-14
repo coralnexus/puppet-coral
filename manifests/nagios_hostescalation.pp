@@ -1,5 +1,5 @@
 
-define coral::nagios_hostescalation (
+define corl::nagios_hostescalation (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_hostescalation (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_hostescalation', $data, $defaults, $name, $options)
+  corl_resources('@nagios_hostescalation', $data, $defaults, $name, $options)
   Nagios_hostescalation<| tag == $name |>
 }

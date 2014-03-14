@@ -1,5 +1,5 @@
 
-define coral::stage (
+define corl::stage (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::stage (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@stage', $data, $defaults, $name, $options)
+  corl_resources('@stage', $data, $defaults, $name, $options)
   Stage<| tag == $name |>
 }

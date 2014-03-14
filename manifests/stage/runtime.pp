@@ -1,18 +1,18 @@
 
-class coral::stage::runtime {
+class corl::stage::runtime {
 
-  $base_name = $coral::params::base_name
-  $stage_name = $coral::params::runtime_name
+  $base_name = $corl::params::base_name
+  $stage_name = $corl::params::runtime_name
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::package { $stage_name:
+  corl::package { $stage_name:
     resources => {
       all => {
-        name => $coral::params::runtime_package_names
+        name => $corl::params::runtime_package_names
       }
     },
-    defaults => { ensure => $coral::params::package_ensure }
+    defaults => { ensure => $corl::params::package_ensure }
   }
 }

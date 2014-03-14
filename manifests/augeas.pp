@@ -1,5 +1,5 @@
 
-define coral::augeas (
+define corl::augeas (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::augeas (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@augeas', $data, $defaults, $name, $options)
+  corl_resources('@augeas', $data, $defaults, $name, $options)
   Augeas<| tag == $name |>
 }

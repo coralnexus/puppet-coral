@@ -1,5 +1,5 @@
 
-define coral::firewallchain (
+define corl::firewallchain (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::firewallchain (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@firewallchain', $data, $defaults, $name, $options)
+  corl_resources('@firewallchain', $data, $defaults, $name, $options)
   Firewallchain<| tag == $name |>
 }

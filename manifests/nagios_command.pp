@@ -1,5 +1,5 @@
 
-define coral::nagios_command (
+define corl::nagios_command (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_command (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_command', $data, $defaults, $name, $options)
+  corl_resources('@nagios_command', $data, $defaults, $name, $options)
   Nagios_command<| tag == $name |>
 }

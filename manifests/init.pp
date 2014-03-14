@@ -1,39 +1,16 @@
-# Class: coral
+# Class: corl
 #
-#   General purpose Puppet framework that focuses on extensibility and
-#   compatibility between 2.x / 3.x and Hiera / non-Hiera systems.
-#
-#   This module provides a core framework for building and utilizing other
-#   Puppet modules.  It also installs misc packages and utilities that do not
-#   fit neatly into specialized bundles and creates and manages custom Facter
-#   facts that are loaded through the user environment.  Finally it manages the
-#   general security procedures and tools on a server, among the most important
-#   functions are creating an extensible firewall rule system and a locked down
-#   default.
-#
-#   TODO: Configuration template engine
+#   Manages the CORL system.  (see: http://coralnexus.com/projects/corl)
 #
 #
-#   Adrian Webb <adrian.webb@coraltech.net>
-#   2013-03-30
+#   Adrian Webb <adrian.webb@coralnexus.com>
+#   2014-03-13
 #
 #   Tested platforms:
 #    - Ubuntu 12.04
 #
 #
 # Parameters: (see <examples/params.json> for Hiera configurations)
-#
-#
-# Actions:
-#
-#   - Provides a function and fact based framework for working with modules.
-#   - Installs general purpose packages and manages custom facts on the server.
-#   - Creates an extensible firewall rule system and locked down default.
-#   - Installs the Ruby language
-#   - Installs the Ruby Gem package manager
-#   - Configures the Ruby environment
-#   - Installs and configures other Ruby related resources as needed
-#
 #
 # Requires:
 #
@@ -45,32 +22,26 @@
 #
 # Sample Usage: (from site.pp) <- Puppet node gateway
 #
-#   import "*.pp"
-#   import "default/*.pp"
-#   include global::default
-#
-#   #---
-#
 #   resources { "firewall":
 #     purge => true
 #   }
 #   Firewall {
-#     before  => Class['coral::firewall::post_rules'],
-#     require => Class['coral::firewall::pre_rules'],
+#     before  => Class['corl::firewall::post_rules'],
+#     require => Class['corl::firewall::pre_rules'],
 #   }
 #
-#   include coral
-#   include coral::firewall::pre_rules
-#   include coral::firewall::post_rules
+#   include corl
+#   include corl::firewall::pre_rules
+#   include corl::firewall::post_rules
 #
 #   Exec {
-#     user => $coral::params::exec_user,
-#     path => $coral::params::exec_path
+#     user => $corl::params::exec_user,
+#     path => $corl::params::exec_path
 #   }
 #
-class coral inherits coral::params {
+class corl inherits corl::params {
 
-  $base_name = $coral::params::base_name
+  $base_name = $corl::params::base_name
 
   #---
 
@@ -80,24 +51,24 @@ class coral inherits coral::params {
   #---
 
   module_options('log', {
-    config_log   => $coral::params::property_path,
-    config_store => $coral::params::property_store
+    config_log   => $corl::params::property_path,
+    config_store => $corl::params::property_store
   })
-  include coral::system::log
+  include corl::system::log
 
   # Core systems to get a fully functional Puppet server with security permissions.
 
-  if ($coral::params::manage_ruby) {
-    include coral::system::ruby
+  if ($corl::params::manage_ruby) {
+    include corl::system::ruby
   }
-  if ($coral::params::manage_puppet) {
-    include coral::system::puppet
+  if ($corl::params::manage_puppet) {
+    include corl::system::puppet
   }
-  if ($coral::params::manage_ssh) {
-    include coral::system::ssh
+  if ($corl::params::manage_ssh) {
+    include corl::system::ssh
   }
-  if ($coral::params::manage_sudo) {
-    include coral::system::sudo
+  if ($corl::params::manage_sudo) {
+    include corl::system::sudo
   }
 
   #-----------------------------------------------------------------------------
@@ -106,55 +77,51 @@ class coral inherits coral::params {
   case $::operatingsystem {
     debian, ubuntu : {
       class { 'apt':
-        always_apt_update    => $coral::params::apt_always_apt_update,
-        disable_keys         => $coral::params::apt_disable_keys,
-        proxy_host           => $coral::params::apt_proxy_host,
-        proxy_port           => $coral::params::apt_proxy_port,
-        purge_sources_list   => $coral::params::apt_purge_sources_list,
-        purge_sources_list_d => $coral::params::apt_purge_sources_list_d,
-        purge_preferences_d  => $coral::params::apt_purge_preferences_d,
+        always_apt_update    => $corl::params::apt_always_apt_update,
+        disable_keys         => $corl::params::apt_disable_keys,
+        proxy_host           => $corl::params::apt_proxy_host,
+        proxy_port           => $corl::params::apt_proxy_port,
+        purge_sources_list   => $corl::params::apt_purge_sources_list,
+        purge_sources_list_d => $corl::params::apt_purge_sources_list_d,
+        purge_preferences_d  => $corl::params::apt_purge_preferences_d,
       }
-      Class['apt'] -> Coral::Package[$base_name]
+      Class['apt'] -> Corl::Package[$base_name]
     }
   }
 
+  #--- 
+
+  class { 'corl::stage::setup': stage => 'setup' }
+  class { 'corl::stage::runtime': stage => 'runtime' }
+
   #---
 
-  class { 'coral::stage::setup': stage => 'setup' }
-  class { 'coral::stage::runtime': stage => 'runtime' }
-
-  #---
-
-  coral::package { $base_name:
+  corl::package { $base_name:
     resources => {
       build_packages  => {
-        name => $coral::params::build_package_names
+        name => $corl::params::build_package_names
       },
       common_packages => {
-        name    => $coral::params::common_package_names,
+        name    => $corl::params::common_package_names,
         require => 'build_packages'
       },
       extra_packages  => {
-        name    => $coral::params::extra_package_names,
+        name    => $corl::params::extra_package_names,
         require => 'common_packages'
       }
     },
     defaults  => {
-      ensure => $coral::params::package_ensure
+      ensure => $corl::params::package_ensure
     }
   }
 
   #-----------------------------------------------------------------------------
   # Configuration
 
-  coral::file { $base_name:
+  corl::file { $base_name:
     resources => {
-      env => {
-        path    => $coral::params::fact_env_file,
-        content => render($coral::params::env_template, $coral::params::facts, { name_prefix => 'FACTER' })
-      },
       vagrant_env => {
-        path    => $coral::params::vagrant_env_file,
+        path    => $corl::params::vagrant_env_file,
         ensure  => 'absent'
       }
     }
@@ -162,26 +129,26 @@ class coral inherits coral::params {
 
   #---
 
-  coral::vcsrepo { $base_name: }
+  corl::vcsrepo { $base_name: }
 
   #---
 
-  include coral::firewall::icmp
-  coral::firewall { $base_name: }
+  include corl::firewall::icmp
+  corl::firewall { $base_name: }
 
   #-----------------------------------------------------------------------------
   # Actions
 
-  coral::exec { $base_name: }
+  corl::exec { $base_name: }
 
   #-----------------------------------------------------------------------------
   # Services
 
-  coral::service { $base_name: require => Coral::Firewall[$base_name] }
-  coral::cron { $base_name: require => Coral::Service[$base_name] }
+  corl::service { $base_name: require => Corl::Firewall[$base_name] }
+  corl::cron { $base_name: require => Corl::Service[$base_name] }
 
   #-----------------------------------------------------------------------------
   # Resources
 
-  coral_resources('coral::make', "${base_name}::make", "${base_name}::make_defaults")
+  corl_resources('corl::make', "${base_name}::make", "${base_name}::make_defaults")
 }

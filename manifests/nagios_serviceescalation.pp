@@ -1,5 +1,5 @@
 
-define coral::nagios_serviceescalation (
+define corl::nagios_serviceescalation (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_serviceescalation (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_serviceescalation', $data, $defaults, $name, $options)
+  corl_resources('@nagios_serviceescalation', $data, $defaults, $name, $options)
   Nagios_serviceescalation<| tag == $name |>
 }

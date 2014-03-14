@@ -1,5 +1,5 @@
 
-define coral::macauthorization (
+define corl::macauthorization (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::macauthorization (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@macauthorization', $data, $defaults, $name, $options)
+  corl_resources('@macauthorization', $data, $defaults, $name, $options)
   Macauthorization<| tag == $name |>
 }

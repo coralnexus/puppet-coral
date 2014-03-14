@@ -1,5 +1,5 @@
 
-define coral::nagios_timeperiod (
+define corl::nagios_timeperiod (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_timeperiod (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_timeperiod', $data, $defaults, $name, $options)
+  corl_resources('@nagios_timeperiod', $data, $defaults, $name, $options)
   Nagios_timeperiod<| tag == $name |>
 }

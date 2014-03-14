@@ -1,5 +1,5 @@
 
-define coral::mcx (
+define corl::mcx (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::mcx (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@mcx', $data, $defaults, $name, $options)
+  corl_resources('@mcx', $data, $defaults, $name, $options)
   Mcx<| tag == $name |>
 }

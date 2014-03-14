@@ -1,17 +1,16 @@
-name 'coraltech-coral'
+name 'coralnexus-corl'
 version '0.0.1'
 
 author 'Adrian Webb'
 license 'ASL 2.0'
-project_page 'http://github.com/coraltech/puppet-coral'
-source 'git://github.com/coraltech/puppet-coral.git'
-summary 'General purpose Puppet framework that focuses on extensibility and compatibility.'
-description 'This module provides a core framework for building and utilizing other 
-Puppet modules.  It also installs misc packages and utilities that do not fit neatly 
-into specialized bundles and creates and manages custom Facter facts that are loaded 
-through the user environment.  Finally it manages the general security procedures and 
-tools on a server, among the most important functions are creating an extensible 
-firewall rule system and a locked down default.'
+project_page 'http://github.com/coralnexus/puppet-corl'
+source 'git://github.com/coralnexus/puppet-corl.git'
+summary 'Puppet CORL interface'
+description 'This module provides a Puppet framework for configuring a system through the CORL system.
+
+See:  
+http://github.com/coralnexus/corl
+http://coralnexus.com/projects/corl'
 dependency 'puppetlabs/stdlib', '>=3.2.0'
 dependency 'puppetlabs/apt', '>=1.1.0'
 dependency 'puppetlabs/firewall', '>=0.2.1'

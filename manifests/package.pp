@@ -1,5 +1,5 @@
 
-define coral::package (
+define corl::package (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::package (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@package', $data, $defaults, $name, $options)
+  corl_resources('@package', $data, $defaults, $name, $options)
   Package<| tag == $name |>
 }

@@ -1,5 +1,5 @@
 
-define coral::filebucket (
+define corl::filebucket (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::filebucket (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@filebucket', $data, $defaults, $name, $options)
+  corl_resources('@filebucket', $data, $defaults, $name, $options)
   Filebucket<| tag == $name |>
 }

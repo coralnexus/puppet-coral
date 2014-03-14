@@ -1,5 +1,5 @@
 
-define coral::schedule (
+define corl::schedule (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::schedule (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@schedule', $data, $defaults, $name, $options)
+  corl_resources('@schedule', $data, $defaults, $name, $options)
   Schedule<| tag == $name |>
 }

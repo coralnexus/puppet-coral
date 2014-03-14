@@ -1,5 +1,5 @@
 
-define coral::maillist (
+define corl::maillist (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::maillist (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@maillist', $data, $defaults, $name, $options)
+  corl_resources('@maillist', $data, $defaults, $name, $options)
   Maillist<| tag == $name |>
 }

@@ -1,5 +1,5 @@
 
-class coral::default {
+class corl::default {
 
   case $::operatingsystem {
     debian, ubuntu : {
@@ -46,7 +46,7 @@ class coral::default {
 
       # Debian Coral logging
 
-      $log_dir = '/var/log/coral'
+      $log_dir = '/var/log/corl'
     }
   }
 }

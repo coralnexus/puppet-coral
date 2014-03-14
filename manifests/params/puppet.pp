@@ -1,5 +1,5 @@
 
-class coral::params::puppet inherits coral::default {
+class corl::params::puppet {
 
   $apt_location   = module_param('puppet_apt_location', 'http://apt.puppetlabs.com')
   $apt_repos      = module_param('puppet_apt_repos', 'main dependencies')
@@ -16,12 +16,12 @@ class coral::params::puppet inherits coral::default {
     'DAEMON_OPTS' => ''
   })
 
-  $config_template = module_param('puppet_config_template', 'PuppetConf')
+  $config_template = module_param('puppet_config_template', 'puppetconf')
 
   # For available options, see: http://docs.puppetlabs.com/references/3.1.latest/configuration.html
   $config = module_hash('puppet_config', {
     main => {
-      data_binding_terminus => 'coral',
+      data_binding_terminus => 'corl',
       confdir               => '/etc/puppet',
       config                => '$confdir/puppet.conf',
       logdir                => '/var/log/puppet',
@@ -46,12 +46,12 @@ class coral::params::puppet inherits coral::default {
   $tagmail_config_file      = interpolate($config['main']['tagmap'], $config['main'])
   $report_dir               = interpolate($config['main']['reportdir'], $config['main'])
 
-  $tagmail_template = module_param('puppet_tagmail_template', 'coral/tagmail.conf.erb')
+  $tagmail_template = module_param('puppet_tagmail_template', 'corl/tagmail.conf.erb')
   $report_emails    = module_hash('puppet_report_emails')
 
   $hiera_config_file            = module_param('hiera_config_file', '/etc/hiera.yaml')
-  $hiera_config_template        = module_param('hiera_config_template', 'coral/hiera.yaml.erb')
-  $hiera_puppet_config_template = module_param('hiera_puppet_config_template', 'coral/hiera.puppet.yaml.erb')
+  $hiera_config_template        = module_param('hiera_config_template', 'corl/hiera.yaml.erb')
+  $hiera_puppet_config_template = module_param('hiera_puppet_config_template', 'corl/hiera.puppet.yaml.erb')
 
   $hiera_backends = module_array('hiera_backends', [
     module_hash('hiera_json_backend', {

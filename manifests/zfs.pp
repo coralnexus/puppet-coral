@@ -1,5 +1,5 @@
 
-define coral::zfs (
+define corl::zfs (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::zfs (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@zfs', $data, $defaults, $name, $options)
+  corl_resources('@zfs', $data, $defaults, $name, $options)
   Zfs<| tag == $name |>
 }

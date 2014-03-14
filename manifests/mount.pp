@@ -1,5 +1,5 @@
 
-define coral::mount (
+define corl::mount (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::mount (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@mount', $data, $defaults, $name, $options)
+  corl_resources('@mount', $data, $defaults, $name, $options)
   Mount<| tag == $name |>
 }

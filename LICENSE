@@ -1,9 +1,7 @@
-Puppet Global Lib Module - Puppet module for installing general purpose packages.
+Puppet CORL - Puppet module for managing the CORL system.
 
-Copyright (C) 2012 Coral Technology Group LLC
-Copyright (C) 2012 Adrian Webb
-
-Coral Technology Group can be contacted at: admin@coraltg.com
+Copyright (C) 2014 Coral Technology Group LLC
+Copyright (C) 2014 Adrian Webb (adrian.webb@coralnexus.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

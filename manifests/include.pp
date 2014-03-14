@@ -1,5 +1,5 @@
 
-define coral::include (
+define corl::include (
 
   $classes    = $name,
   $parameters = {},
@@ -10,5 +10,5 @@ define coral::include (
   anchor { $name: }
 
   $merged_parameters = deep_merge({ require => Anchor[$name] }, $parameters)
-  coral_include($classes, $merged_parameters, $options)
+  corl_include($classes, $merged_parameters, $options)
 }

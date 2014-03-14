@@ -1,5 +1,5 @@
 
-define coral::make (
+define corl::make (
 
   $packages        = [],
   $package_ensure  = 'present',
@@ -11,30 +11,30 @@ define coral::make (
   $config_options  = '',
   $make_options    = '',
   $install_options = '',
-  $user            = $coral::params::exec_user,
-  $group           = $coral::params::exec_group,
+  $user            = $corl::params::exec_user,
+  $group           = $corl::params::exec_group,
   $notify          = undef
 
 ) {
-  $base_name = $coral::params::base_name
+  $base_name       = $corl::params::base_name
   $definition_name = "${base_name}_make_${name}"
 
   #-----------------------------------------------------------------------------
   # Installation
 
-  coral::package { $definition_name:
+  corl::package { $definition_name:
     resources => {
       all => {
         name => $packages
       }
     },
     defaults => { ensure => $package_ensure },
-    require  => Coral::Package[$base_name]
+    require  => Corl::Package[$base_name]
   }
 
   #---
 
-  coral::vcsrepo { $definition_name:
+  corl::vcsrepo { $definition_name:
     resources => {
       repo => {
         path     => $repo_path,
@@ -49,12 +49,12 @@ define coral::make (
       owner    => $user,
       group    => $group
     },
-    require => Coral::Package[$definition_name]
+    require => Corl::Package[$definition_name]
   }
 
   #---
 
-  coral::exec { $definition_name:
+  corl::exec { $definition_name:
     resources => {
       configure => {
         command => "./configure ${config_options}"
@@ -73,6 +73,6 @@ define coral::make (
       cwd         => $repo_path,
       refreshonly => true
     },
-    require => Coral::Vcsrepo[$base_name]
+    require => Corl::Vcsrepo[$base_name]
   }
 }

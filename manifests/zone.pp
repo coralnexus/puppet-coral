@@ -1,5 +1,5 @@
 
-define coral::zone (
+define corl::zone (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::zone (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@zone', $data, $defaults, $name, $options)
+  corl_resources('@zone', $data, $defaults, $name, $options)
   Zone<| tag == $name |>
 }

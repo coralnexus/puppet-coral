@@ -1,5 +1,5 @@
 
-define coral::zpool (
+define corl::zpool (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::zpool (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@zpool', $data, $defaults, $name, $options)
+  corl_resources('@zpool', $data, $defaults, $name, $options)
   Zpool<| tag == $name |>
 }

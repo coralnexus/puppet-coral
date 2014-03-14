@@ -1,5 +1,5 @@
 
-define coral::sshkey (
+define corl::sshkey (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::sshkey (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@sshkey', $data, $defaults, $name, $options)
+  corl_resources('@sshkey', $data, $defaults, $name, $options)
   Sshkey<| tag == $name |>
 }

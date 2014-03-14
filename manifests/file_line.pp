@@ -1,5 +1,5 @@
 
-define coral::file_line (
+define corl::file_line (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::file_line (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@file_line', $data, $defaults, $name, $options)
+  corl_resources('@file_line', $data, $defaults, $name, $options)
   File_line<| tag == $name |>
 }

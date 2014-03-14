@@ -1,5 +1,5 @@
 
-define coral::computer (
+define corl::computer (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::computer (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@computer', $data, $defaults, $name, $options)
+  corl_resources('@computer', $data, $defaults, $name, $options)
   Computer<| tag == $name |>
 }

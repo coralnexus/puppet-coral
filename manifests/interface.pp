@@ -1,5 +1,5 @@
 
-define coral::interface (
+define corl::interface (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::interface (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@interface', $data, $defaults, $name, $options)
+  corl_resources('@interface', $data, $defaults, $name, $options)
   Interface<| tag == $name |>
 }

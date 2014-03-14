@@ -1,24 +1,24 @@
 
-class coral::system::log {
+class corl::system::log {
 
-  $base_name = "${coral::params::base_name}_log"
+  $base_name = "${corl::params::base_name}_log"
 
   # No configurations should be declared after this resource group.
-  coral::file { $base_name:
+  corl::file { $base_name:
     resources => {
       log_dir => {
-        path => $coral::params::log_dir,
+        path => $corl::params::log_dir,
         ensure => 'directory',
-        owner  => $coral::params::log_owner,
-        group  => $coral::params::log_group,
-        mode   => $coral::params::log_dir_mode
+        owner  => $corl::params::log_owner,
+        group  => $corl::params::log_group,
+        mode   => $corl::params::log_dir_mode
       },
       properties => {
-        path    => $coral::params::property_path,
+        path    => $corl::params::property_path,
         ensure  => 'present',
-        owner   => $coral::params::log_owner,
-        group   => $coral::params::log_group,
-        mode    => $coral::params::property_file_mode,
+        owner   => $corl::params::log_owner,
+        group   => $corl::params::log_group,
+        mode    => $corl::params::property_file_mode,
         require => 'log_dir'
       }
     }

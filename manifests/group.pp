@@ -1,5 +1,5 @@
 
-define coral::group (
+define corl::group (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::group (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@group', $data, $defaults, $name, $options)
+  corl_resources('@group', $data, $defaults, $name, $options)
   Group<| tag == $name |>
 }

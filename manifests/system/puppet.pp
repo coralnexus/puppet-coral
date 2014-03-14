@@ -1,9 +1,9 @@
 
-class coral::system::puppet inherits coral::params::puppet {
+class corl::system::puppet inherits corl::params::puppet {
 
-  $base_name   = $coral::params::base_name
-  $ruby_name   = $coral::params::ruby_name
-  $system_name = $coral::params::puppet_name
+  $base_name   = $corl::params::base_name
+  $ruby_name   = $corl::params::ruby_name
+  $system_name = $corl::params::puppet_name
 
   #-----------------------------------------------------------------------------
   # Installation
@@ -11,69 +11,69 @@ class coral::system::puppet inherits coral::params::puppet {
   case $::operatingsystem {
     debian, ubuntu : {
       apt::source { $system_name:
-        location   => $coral::params::puppet::apt_location,
-        repos      => $coral::params::puppet::apt_repos,
-        key        => $coral::params::puppet::apt_key,
-        key_server => $coral::params::puppet::apt_key_server
+        location   => $corl::params::puppet::apt_location,
+        repos      => $corl::params::puppet::apt_repos,
+        key        => $corl::params::puppet::apt_key,
+        key_server => $corl::params::puppet::apt_key_server
       }
-      Class['apt'] -> Coral::Package[$system_name]
+      Class['apt'] -> Corl::Package[$system_name]
     }
   }
 
   #---
 
-  coral::package { $system_name:
+  corl::package { $system_name:
     resources => {
       core_packages => {
-        name => $coral::params::puppet::package_names
+        name => $corl::params::puppet::package_names
       },
       extra_packages  => {
-        name    => $coral::params::puppet::extra_package_names,
+        name    => $corl::params::puppet::extra_package_names,
         require => 'core_packages'
       }
     },
     defaults  => {
-      ensure => $coral::params::package_ensure
+      ensure => $corl::params::package_ensure
     },
-    require => Coral::Gem[$ruby_name]
+    require => Corl::Gem[$ruby_name]
   }
 
   #-----------------------------------------------------------------------------
   # Configuration
 
-  $report_emails = $coral::params::puppet::report_emails
+  $report_emails = $corl::params::puppet::report_emails
 
-  $hiera_merge_type = $coral::params::puppet::hiera_merge_type
-  $hiera_hierarchy  = $coral::params::puppet::hiera_hierarchy
-  $hiera_backends   = $coral::params::puppet::hiera_backends
+  $hiera_merge_type = $corl::params::puppet::hiera_merge_type
+  $hiera_hierarchy  = $corl::params::puppet::hiera_hierarchy
+  $hiera_backends   = $corl::params::puppet::hiera_backends
 
-  coral::file { $system_name:
+  corl::file { $system_name:
     resources => {
       init_conf => {
-        path    => $coral::params::puppet::init_config_file,
-        content => render($coral::params::env_template, [ $coral::params::puppet::daemon_env, {
-          'START' => $coral::params::puppet::service_ensure ? { 'running' => 'yes', default => 'no' },
+        path    => $corl::params::puppet::init_config_file,
+        content => render($corl::params::env_template, [ $corl::params::puppet::daemon_env, {
+          'START' => $corl::params::puppet::service_ensure ? { 'running' => 'yes', default => 'no' },
         }])
       },
       conf => {
-        path    => $coral::params::puppet::config_file,
-        content => render($coral::params::puppet::config_template, $coral::params::puppet::config)
+        path    => $corl::params::puppet::config_file,
+        content => render($corl::params::puppet::config_template, $corl::params::puppet::config)
       },
       tag_map => {
-        path    => $coral::params::puppet::tagmail_config_file,
-        content => template($coral::params::puppet::tagmail_template)
+        path    => $corl::params::puppet::tagmail_config_file,
+        content => template($corl::params::puppet::tagmail_template)
       },
       report_dir => {
-        path => $coral::params::puppet::report_dir,
+        path => $corl::params::puppet::report_dir,
         ensure => 'directory'
       },
       hiera_config => {
-        path    => $coral::params::puppet::hiera_config_file,
-        content => template($coral::params::puppet::hiera_config_template),
+        path    => $corl::params::puppet::hiera_config_file,
+        content => template($corl::params::puppet::hiera_config_template),
       },
       hiera_puppet_config => {
-        path    => $coral::params::puppet::hiera_puppet_config_file,
-        content => template($coral::params::puppet::hiera_puppet_config_template),
+        path    => $corl::params::puppet::hiera_puppet_config_file,
+        content => template($corl::params::puppet::hiera_puppet_config_template),
       }
     },
     defaults => { notify => Service["${system_name}_service"] }
@@ -82,28 +82,28 @@ class coral::system::puppet inherits coral::params::puppet {
   #-----------------------------------------------------------------------------
   # Services
 
-  coral::service { $system_name:
+  corl::service { $system_name:
     resources => {
       service => {
-        name   => $coral::params::puppet::service_name,
-        ensure => $coral::params::puppet::service_ensure,
+        name   => $corl::params::puppet::service_name,
+        ensure => $corl::params::puppet::service_ensure,
       }
     },
-    require => [ Coral::Service[$base_name], Coral::Package[$system_name] ]
+    require => [ Corl::Service[$base_name], Corl::Package[$system_name] ]
   }
 
   #---
 
-  coral::cron { $system_name:
+  corl::cron { $system_name:
     resources => {
       refresh => {
-        ensure      => $coral::params::puppet::cron_ensure,
-        environment => $coral::params::puppet::update_environment,
-        command     => $coral::params::puppet::update_command,
-        user        => $coral::params::puppet::cron_user,
-        minute      => $coral::params::puppet::update_interval
+        ensure      => $corl::params::puppet::cron_ensure,
+        environment => $corl::params::puppet::update_environment,
+        command     => $corl::params::puppet::update_command,
+        user        => $corl::params::puppet::cron_user,
+        minute      => $corl::params::puppet::update_interval
       }
     },
-    require => Coral::Service[$system_name]
+    require => Corl::Service[$system_name]
   }
 }

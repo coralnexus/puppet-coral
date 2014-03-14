@@ -1,5 +1,5 @@
 
-define coral::yumrepo (
+define corl::yumrepo (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::yumrepo (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@yumrepo', $data, $defaults, $name, $options)
+  corl_resources('@yumrepo', $data, $defaults, $name, $options)
   Yumrepo<| tag == $name |>
 }

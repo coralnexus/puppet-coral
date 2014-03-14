@@ -1,5 +1,5 @@
 
-define coral::vcsrepo (
+define corl::vcsrepo (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::vcsrepo (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@vcsrepo', $data, $defaults, $name, $options)
+  corl_resources('@vcsrepo', $data, $defaults, $name, $options)
   Vcsrepo<| tag == $name |>
 }

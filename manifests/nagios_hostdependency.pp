@@ -1,5 +1,5 @@
 
-define coral::nagios_hostdependency (
+define corl::nagios_hostdependency (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_hostdependency (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_hostdependency', $data, $defaults, $name, $options)
+  corl_resources('@nagios_hostdependency', $data, $defaults, $name, $options)
   Nagios_hostdependency<| tag == $name |>
 }

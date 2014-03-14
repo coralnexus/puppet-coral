@@ -1,5 +1,5 @@
 
-define coral::nagios_contactgroup (
+define corl::nagios_contactgroup (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_contactgroup (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_contactgroup', $data, $defaults, $name, $options)
+  corl_resources('@nagios_contactgroup', $data, $defaults, $name, $options)
   Nagios_contactgroup<| tag == $name |>
 }

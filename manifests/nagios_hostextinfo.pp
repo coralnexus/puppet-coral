@@ -1,5 +1,5 @@
 
-define coral::nagios_hostextinfo (
+define corl::nagios_hostextinfo (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_hostextinfo (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_hostextinfo', $data, $defaults, $name, $options)
+  corl_resources('@nagios_hostextinfo', $data, $defaults, $name, $options)
   Nagios_hostextinfo<| tag == $name |>
 }

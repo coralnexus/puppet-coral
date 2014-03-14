@@ -1,5 +1,5 @@
 
-define coral::firewall (
+define corl::firewall (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::firewall (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@firewall', $data, $defaults, $name, $options)
+  corl_resources('@firewall', $data, $defaults, $name, $options)
   Firewall<| tag == $name |>
 }

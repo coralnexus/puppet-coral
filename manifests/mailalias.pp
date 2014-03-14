@@ -1,5 +1,5 @@
 
-define coral::mailalias (
+define corl::mailalias (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::mailalias (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@mailalias', $data, $defaults, $name, $options)
+  corl_resources('@mailalias', $data, $defaults, $name, $options)
   Mailalias<| tag == $name |>
 }

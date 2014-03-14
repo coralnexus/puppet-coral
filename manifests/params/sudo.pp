@@ -1,5 +1,5 @@
 
-class coral::params::sudo inherits coral::default {
+class corl::params::sudo {
 
   $visudo_bin        = module_param('visudo_bin')
   $sudoers_file      = module_param('sudoers_file')
@@ -9,8 +9,8 @@ class coral::params::sudo inherits coral::default {
   $sudoers_config_group = module_param('sudoers_config_group', 'root')
   $sudoers_config_mode  = module_param('sudoers_config_mode', '0440')
 
-  $sudoers_template      = module_param('sudoers_template', 'SudoersConf')
-  $sudoers_template_file = module_param('sudoers_template_file', 'coral/sudoers.erb')
+  $sudoers_template      = module_param('sudoers_template', 'sudoersconf')
+  $sudoers_template_file = module_param('sudoers_template_file', 'corl/sudoers.erb')
 
   $sudoers_dir = module_param('sudoers_dir')
 

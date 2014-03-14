@@ -1,5 +1,5 @@
 
-define coral::nagios_servicedependency (
+define corl::nagios_servicedependency (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_servicedependency (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_servicedependency', $data, $defaults, $name, $options)
+  corl_resources('@nagios_servicedependency', $data, $defaults, $name, $options)
   Nagios_servicedependency<| tag == $name |>
 }

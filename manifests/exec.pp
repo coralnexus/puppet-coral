@@ -1,5 +1,5 @@
 
-define coral::exec (
+define corl::exec (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::exec (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@exec', $data, $defaults, $name, $options)
+  corl_resources('@exec', $data, $defaults, $name, $options)
   Exec<| tag == $name |>
 }

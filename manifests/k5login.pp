@@ -1,5 +1,5 @@
 
-define coral::k5login (
+define corl::k5login (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::k5login (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@k5login', $data, $defaults, $name, $options)
+  corl_resources('@k5login', $data, $defaults, $name, $options)
   K5login<| tag == $name |>
 }

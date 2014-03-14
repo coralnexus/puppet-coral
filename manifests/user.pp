@@ -1,5 +1,5 @@
 
-define coral::user (
+define corl::user (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::user (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@user', $data, $defaults, $name, $options)
+  corl_resources('@user', $data, $defaults, $name, $options)
   User<| tag == $name |>
 }

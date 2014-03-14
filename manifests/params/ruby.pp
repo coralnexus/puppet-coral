@@ -1,5 +1,5 @@
 
-class coral::params::ruby inherits coral::default {
+class corl::params::ruby {
 
   $package_names       = module_array('ruby_package_names')
   $extra_package_names = module_array('ruby_extra_package_names')
@@ -7,7 +7,7 @@ class coral::params::ruby inherits coral::default {
   $ruby_exec     = module_param('ruby_exec')
   $rubygems_exec = module_param('rubygems_exec')
 
-  $gem_names  = module_array('gem_names', ['libshadow', 'coral'])
+  $gem_names  = module_array('gem_names', ['libshadow', 'corl'])
   $gem_ensure = module_param('gem_ensure', 'latest')
 
   $env_file = module_param('ruby_env_file', '/etc/profile.d/ruby.sh')

@@ -1,5 +1,5 @@
 
-define coral::host (
+define corl::host (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::host (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@host', $data, $defaults, $name, $options)
+  corl_resources('@host', $data, $defaults, $name, $options)
   Host<| tag == $name |>
 }

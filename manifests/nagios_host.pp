@@ -1,5 +1,5 @@
 
-define coral::nagios_host (
+define corl::nagios_host (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_host (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_host', $data, $defaults, $name, $options)
+  corl_resources('@nagios_host', $data, $defaults, $name, $options)
   Nagios_host<| tag == $name |>
 }

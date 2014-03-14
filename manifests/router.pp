@@ -1,5 +1,5 @@
 
-define coral::router (
+define corl::router (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::router (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@router', $data, $defaults, $name, $options)
+  corl_resources('@router', $data, $defaults, $name, $options)
   Router<| tag == $name |>
 }

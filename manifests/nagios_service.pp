@@ -1,5 +1,5 @@
 
-define coral::nagios_service (
+define corl::nagios_service (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::nagios_service (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@nagios_service', $data, $defaults, $name, $options)
+  corl_resources('@nagios_service', $data, $defaults, $name, $options)
   Nagios_service<| tag == $name |>
 }

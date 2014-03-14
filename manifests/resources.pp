@@ -1,5 +1,5 @@
 
-define coral::resources (
+define corl::resources (
 
   $resources = {},
   $overrides = {},
@@ -8,6 +8,6 @@ define coral::resources (
 
 ) {
   $data = flatten([ $resources, $overrides ])
-  coral_resources('@resources', $data, $defaults, $name, $options)
+  corl_resources('@resources', $data, $defaults, $name, $options)
   Resources<| tag == $name |>
 }

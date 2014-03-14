@@ -1,5 +1,5 @@
 
-class corl::params {
+class corl::params inherits corl::default {
 
   # Names
 

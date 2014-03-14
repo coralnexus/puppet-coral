@@ -1,5 +1,5 @@
 
-class corl::params::ssh {
+class corl::params::ssh inherits corl::default {
 
   $package_names       = module_array('ssh_package_names')
   $extra_package_names = module_array('ssh_extra_package_names')

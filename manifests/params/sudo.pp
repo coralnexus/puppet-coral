@@ -1,5 +1,5 @@
 
-class corl::params::sudo {
+class corl::params::sudo inherits corl::default {
 
   $visudo_bin        = module_param('visudo_bin')
   $sudoers_file      = module_param('sudoers_file')

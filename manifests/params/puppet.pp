@@ -1,5 +1,5 @@
 
-class corl::params::puppet {
+class corl::params::puppet inherits corl::default {
 
   $apt_location   = module_param('puppet_apt_location', 'http://apt.puppetlabs.com')
   $apt_repos      = module_param('puppet_apt_repos', 'main dependencies')

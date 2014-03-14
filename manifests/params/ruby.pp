@@ -1,5 +1,5 @@
 
-class corl::params::ruby {
+class corl::params::ruby inherits corl::default {
 
   $package_names       = module_array('ruby_package_names')
   $extra_package_names = module_array('ruby_extra_package_names')

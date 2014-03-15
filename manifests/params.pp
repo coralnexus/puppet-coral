@@ -40,9 +40,6 @@ class corl::params inherits corl::default {
   $json_template = module_param('json_template', 'json')
   $env_template  = module_param('env_template', 'environment')
 
-  $fact_env_file = module_param('fact_env_file', '/etc/profile.d/facts.sh')
-  $facts         = module_hash('facts')
-
   $vagrant_env_file = module_param('vagrant_env_file', '/etc/profile.d/vagrant_ruby.sh')
 
   $firewall_icmp_name                = module_param('firewall_icmp_name', '101 INPUT allow ICMP')
@@ -58,8 +55,6 @@ class corl::params inherits corl::default {
   $exec_group = module_param('exec_group', 'root')
 
   # Logging
-
-  $config_template    = module_param('config_template', 'Configuration')
 
   $log_dir            = module_param('log_dir')
   $log_dir_mode       = module_param('log_dir_mode', '0744')

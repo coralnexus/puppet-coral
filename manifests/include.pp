@@ -9,6 +9,6 @@ define corl::include (
 
   anchor { $name: }
 
-  $merged_parameters = deep_merge({ require => Anchor[$name] }, $parameters)
+  $merged_parameters = corl_merge({ require => Anchor[$name] }, $parameters)
   corl_include($classes, $merged_parameters, $options)
 }

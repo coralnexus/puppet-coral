@@ -29,8 +29,9 @@ class corl::params::sudo inherits corl::default {
       'Cmnd_Alias'  => {}
     },
     'specs' => {
-      'root'  => 'ALL=(ALL:ALL) ALL',
-      '%sudo' => 'ALL=(ALL:ALL) NOPASSWD:ALL'
+      'root'   => 'ALL=(ALL:ALL) ALL',
+      '%sudo'  => 'ALL=(ALL:ALL) NOPASSWD:ALL',
+      '%admin' => 'ALL=(ALL:ALL) ALL'
     }
   })
 

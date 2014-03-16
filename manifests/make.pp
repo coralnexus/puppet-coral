@@ -13,7 +13,7 @@ define corl::make (
   $install_options = '',
   $user            = $corl::params::exec_user,
   $group           = $corl::params::exec_group,
-  $notify          = undef
+  $install_notify  = undef
 
 ) {
   $base_name       = $corl::params::base_name
@@ -66,7 +66,7 @@ define corl::make (
       make_install => {
         command   => "make install ${install_options}",
         subscribe => "make",
-        notify    => $notify
+        notify    => $install_notify
       }
     },
     defaults  => {

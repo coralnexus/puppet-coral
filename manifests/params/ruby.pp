@@ -7,7 +7,7 @@ class corl::params::ruby inherits corl::default {
   $ruby_exec     = module_param('ruby_exec')
   $rubygems_exec = module_param('rubygems_exec')
 
-  $gem_names  = module_array('gem_names', ['libshadow', 'corl'])
+  $gem_names  = module_array('gem_names', ['corl'])
   $gem_ensure = module_param('gem_ensure', 'latest')
 
   $env_file = module_param('ruby_env_file', '/etc/profile.d/ruby.sh')

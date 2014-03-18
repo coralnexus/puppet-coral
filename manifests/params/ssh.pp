@@ -46,7 +46,7 @@ class corl::params::ssh inherits corl::default {
     'Subsystem'                       => 'sftp /usr/lib/openssh/sftp-server',
     'UsePAM'                          => 'yes',
     'UseDNS'                          => 'no',
-    'AllowGroups'                     => [ 'root', 'vagrant' ]
+    'AllowGroups'                     => [ 'root' ]
   })
   $port = interpolate($config['Port'], $config)
 

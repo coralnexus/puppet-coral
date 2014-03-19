@@ -57,6 +57,10 @@ class corl::params::puppet inherits corl::default {
     module_hash('hiera_json_backend', {
       'type' => 'json',
       'datadir' => '/var/lib/hiera',
+    }),
+    module_hash('hiera_yaml_backend', {
+      'type' => 'yaml',
+      'datadir' => '/var/lib/hiera',
     })
   ])
 

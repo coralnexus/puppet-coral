@@ -12,14 +12,6 @@ class corl::system::log {
         owner  => $corl::params::log_owner,
         group  => $corl::params::log_group,
         mode   => $corl::params::log_dir_mode
-      },
-      properties => {
-        path    => $corl::params::property_path,
-        ensure  => 'present',
-        owner   => $corl::params::log_owner,
-        group   => $corl::params::log_group,
-        mode    => $corl::params::property_file_mode,
-        require => 'log_dir'
       }
     }
   }

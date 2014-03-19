@@ -51,7 +51,7 @@ class corl inherits corl::params {
   #---
 
   module_options('log', {
-    config_log   => $corl::params::property_path,
+    log_dir      => $corl::params::log_dir,
     config_store => $corl::params::property_store
   })
   include corl::system::log

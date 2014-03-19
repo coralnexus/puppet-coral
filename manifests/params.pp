@@ -59,9 +59,6 @@ class corl::params inherits corl::default {
   $log_dir            = module_param('log_dir')
   $log_dir_mode       = module_param('log_dir_mode', '0744')
   $property_store     = module_param('property_store', true)
-  $property_file      = module_param('property_file', 'common.json')
-  $property_file_mode = module_param('property_file_mode', '0744')
-  $property_path      = "${log_dir}/${property_file}"
   $log_owner          = module_param('log_owner', 'root')
   $log_group          = module_param('log_group', 'root')
 }

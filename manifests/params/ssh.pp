@@ -8,15 +8,16 @@ class corl::params::ssh inherits corl::default {
   $init_reload  = module_param('ssh_init_reload', 'reload')
   $init_command = module_param('ssh_init_command', "${init_bin} ${init_reload}")
 
-  $config_file     = module_param('ssh_config_file')
-  $config_template = module_param('ssh_config_template', 'sshconf')
+  $sshd_config_file = module_param('sshd_config_file')
+  $ssh_config_file  = module_param('ssh_config_file')
+  $config_template  = module_param('ssh_config_template', 'sshconf')
 
   $config_owner = module_param('ssh_config_owner', 'root')
   $config_group = module_param('ssh_config_group', 'root')
   $config_mode  = module_param('ssh_config_mode', '0644')
 
   # For available options, see: http://unixhelp.ed.ac.uk/CGI/man-cgi?sshd_config+5
-  $config = module_hash('ssh_config', {
+  $sshd_config = module_hash('sshd_config', {
     'Port'                            => 22,
     'Protocol'                        => 2,
     'HostKey'                         => [ '/etc/ssh/ssh_host_rsa_key', '/etc/ssh/ssh_host_dsa_key', '/etc/ssh/ssh_host_ecdsa_key' ],
@@ -48,7 +49,20 @@ class corl::params::ssh inherits corl::default {
     'UseDNS'                          => 'no',
     'AllowGroups'                     => [ 'root' ]
   })
-  $port = interpolate($config['Port'], $config)
+  $port = interpolate($sshd_config['Port'], $sshd_config)
+    
+  # For available options, see: http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh_config+5
+  $ssh_config = module_hash('ssh_config', {
+    'Host' => {
+      '*' => {
+        'CheckHostIP'               => 'yes',
+        'SendEnv'                   => 'LANG LC_*',
+        'HashKnownHosts'            => 'yes',
+        'GSSAPIAuthentication'      => 'yes',
+        'GSSAPIDelegateCredentials' => 'no'
+      }
+    }  
+  })
 
   $firewall_name = module_param('firewall_ssh_name', '150 INPUT Allow new SSH connections')
 

@@ -33,7 +33,8 @@ class corl::default {
 
       $ssh_init_bin = '/etc/init.d/ssh'
 
-      $ssh_config_file = '/etc/ssh/sshd_config'
+      $sshd_config_file = '/etc/ssh/sshd_config'
+      $ssh_config_file  = '/etc/ssh/ssh_config'
 
       # Debian Sudo
 

@@ -28,16 +28,22 @@ class corl::system::ssh inherits corl::params::ssh {
 
   corl::file { $system_name:
     resources => {
-      conf => {
-        path     => $corl::params::ssh::config_file,
-        content  => render($corl::params::ssh::config_template, $corl::params::ssh::config),
-        owner    => $corl::params::ssh::config_owner,
-        group    => $corl::params::ssh::config_group,
-        mode     => $corl::params::ssh::config_mode,
-        require  => Corl::Package[$system_name]
+      sshd_conf => {
+        path    => $corl::params::ssh::sshd_config_file,
+        content => render($corl::params::ssh::config_template, $corl::params::ssh::sshd_config),
+        notify  => Service["${system_name}_service"]
+      },
+      ssh_conf => {
+        path    => $corl::params::ssh::ssh_config_file,
+        content => render($corl::params::ssh::config_template, $corl::params::ssh::ssh_config)
       }
     },
-    defaults => { notify => Service["${system_name}_service"] }
+    defaults => {
+      owner   => $corl::params::ssh::config_owner,
+      group   => $corl::params::ssh::config_group,
+      mode    => $corl::params::ssh::config_mode,
+      require => Corl::Package[$system_name]       
+    }
   }
 
   #---
@@ -52,7 +58,7 @@ class corl::system::ssh inherits corl::params::ssh {
       reload => {
         command     => $corl::params::ssh::init_command,
         refreshonly => true,
-        subscribe   => File["${system_name}_conf"]
+        subscribe   => File["${system_name}_sshd_conf"]
       }
     }
   }

@@ -1,4 +1,3 @@
-
 class corl::system::puppet inherits corl::params::puppet {
 
   $base_name   = $corl::params::base_name
@@ -26,7 +25,7 @@ class corl::system::puppet inherits corl::params::puppet {
     resources => {
       core_package => {
         name   => $corl::params::puppet::package_name,
-        ensure => $corl::params::puppet::package_ensure,
+        ensure => $corl::params::puppet::package_ensure
       },
       extra_packages  => {
         name    => $corl::params::puppet::extra_package_names,

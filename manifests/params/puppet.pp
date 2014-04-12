@@ -6,7 +6,9 @@ class corl::params::puppet inherits corl::default {
   $apt_key        = module_param('puppet_apt_key', '4BD6EC30')
   $apt_key_server = module_param('puppet_apt_key_server', 'pgp.mit.edu')
 
-  $package_names       = module_array('puppet_package_names')
+  $package_name       = module_param('puppet_package_name')
+  $package_ensure     = module_param('puppet_package_ensure')
+
   $extra_package_names = module_array('puppet_extra_package_names')
 
   $bin = module_param('puppet_bin')

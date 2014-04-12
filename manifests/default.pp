@@ -25,7 +25,8 @@ class corl::default {
 
       # Debian Puppet
 
-      $puppet_package_names       = ['puppet']
+      $puppet_package_name        = 'puppet'
+      $puppet_package_ensure      = '3.4.3-1puppetlabs1'
       $puppet_extra_package_names = ['vim-puppet']
 
       $puppet_init_config_file = '/etc/default/puppet'

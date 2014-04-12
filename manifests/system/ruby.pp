@@ -54,6 +54,10 @@ class corl::system::ruby inherits corl::params::ruby {
       env => {
         path    => $corl::params::ruby::env_file,
         content => render($corl::params::env_template, $corl::params::ruby::variables)
+      },
+      root_gemrc => {
+        path    => $corl::params::ruby::root_gemrc_file,
+        content => $corl::params::ruby::root_gemrc
       }
     }
   }
@@ -63,6 +67,15 @@ class corl::system::ruby inherits corl::params::ruby {
 
   corl::exec { $system_name:
     resources => {
+      set_repository => {
+        command => $corl::params::ruby::set_repo_command,
+        require => Corl::Package[$corl::params::base_name],
+        notify  => 'package_update'
+      },
+      package_update => {
+        command => $corl::params::ruby::package_update_command,
+        notify  => Corl::Package["${system_name}_core"]
+      },
       active => {
         command     => $corl::params::ruby::set_active_command,
         refreshonly => true,

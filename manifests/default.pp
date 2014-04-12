@@ -6,16 +6,22 @@ class corl::default {
       # Debian Common
 
       $build_package_names  = ['build-essential', 'libnl-dev', 'libpopt-dev', 'libxml2-dev', 'libssl-dev', 'libcurl4-openssl-dev', 'libxslt1-dev']
-      $common_package_names = ['vim', 'unzip', 'curl']
+      $common_package_names = ['vim', 'unzip', 'curl', 'python-software-properties']
 
       # Debian Ruby
 
-      $ruby_package_names       = ['ruby1.9.1', 'ruby1.9.1-dev']
+      $ruby_package_names       = ['ruby2.0', 'ruby2.0-dev']
       $ruby_extra_package_names = []
 
-      $ruby_exec     = '/usr/bin/ruby1.9.1'
-      $rubygems_exec = '/usr/bin/gem1.9.1'
-      $gem_home      = '/var/lib/gems/1.9.1'
+      $ruby_exec     = '/usr/bin/ruby2.0'
+      $rubygems_exec = '/usr/bin/gem2.0'
+      $gem_home      = '/var/lib/gems/2.0.0'
+
+      $ruby_env_file        = '/etc/profile.d/ruby.sh'
+      $ruby_root_gemrc_file = '/root/.gemrc'
+
+      $ruby_set_repo_command       = "add-apt-repository -y ppa:brightbox/ruby-ng-experimental"
+      $ruby_package_update_command = 'apt-get update'
 
       # Debian Puppet
 

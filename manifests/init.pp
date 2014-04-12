@@ -39,7 +39,14 @@
 #     path => $corl::params::exec_path
 #   }
 #
-class corl inherits corl::params {
+class corl (
+
+  $manage_ruby   = $corl::params::manage_ruby,
+  $manage_puppet = $corl::params::manage_puppet,
+  $manage_ssh    = $corl::params::manage_ssh,
+  $manage_sudo   = $corl::params::manage_sudo
+
+) inherits corl::params {
 
   $base_name = $corl::params::base_name
 
@@ -56,18 +63,19 @@ class corl inherits corl::params {
   })
   include corl::system::log
 
-  # Core systems to get a fully functional Puppet server with security permissions.
+  # Core systems to get a fully functional CORLized server with security permissions.
+  # Disable only if you know what you are doing and have an alternative!!
 
-  if ($corl::params::manage_ruby) {
+  if ($manage_ruby) {
     include corl::system::ruby
   }
-  if ($corl::params::manage_puppet) {
+  if ($manage_puppet) {
     include corl::system::puppet
   }
-  if ($corl::params::manage_ssh) {
+  if ($manage_ssh) {
     include corl::system::ssh
   }
-  if ($corl::params::manage_sudo) {
+  if ($manage_sudo) {
     include corl::system::sudo
   }
 
@@ -89,7 +97,7 @@ class corl inherits corl::params {
     }
   }
 
-  #--- 
+  #---
 
   class { 'corl::stage::setup': stage => 'setup' }
   class { 'corl::stage::runtime': stage => 'runtime' }

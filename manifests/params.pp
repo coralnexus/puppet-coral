@@ -23,8 +23,8 @@ class corl::params inherits corl::default {
   # Common
 
   $apt_always_apt_update    = module_param('apt_always_apt_update', false)
-  $apt_disable_keys         = module_param('apt_disable_keys', false)
-  $apt_proxy_host           = module_param('apt_proxy_host', false)
+  $apt_disable_keys         = module_param('apt_disable_keys', undef)
+  $apt_proxy_host           = module_param('apt_proxy_host', undef)
   $apt_proxy_port           = module_param('apt_proxy_port', '8080')
   $apt_purge_sources_list   = module_param('apt_purge_sources_list', false)
   $apt_purge_sources_list_d = module_param('apt_purge_sources_list_d', false)

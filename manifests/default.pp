@@ -6,7 +6,9 @@ class corl::default {
       # Debian Common
 
       $build_package_names  = ['build-essential', 'libnl-dev', 'libpopt-dev', 'libxml2-dev', 'libssl-dev', 'libcurl4-openssl-dev', 'libxslt1-dev']
-      $common_package_names = ['vim', 'unzip', 'curl', 'python-software-properties']
+      $common_package_names = ['vim', 'unzip', 'curl']
+
+      $package_helper       = 'python-software-properties'
 
       # Debian Ruby
 

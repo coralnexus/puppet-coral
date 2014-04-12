@@ -116,6 +116,10 @@ class corl (
       extra_packages  => {
         name    => $corl::params::extra_package_names,
         require => 'common_packages'
+      },
+      package_helper => {
+        name     => $corl::params::package_helper,
+        require  => 'common_packages'
       }
     },
     defaults  => {

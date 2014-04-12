@@ -37,6 +37,8 @@ class corl::params inherits corl::default {
   $extra_package_names   = module_array('extra_package_names')
   $runtime_package_names = module_array('runtime_package_names')
 
+  $package_helper        = module_param('package_helper')
+
   $json_template = module_param('json_template', 'json')
   $env_template  = module_param('env_template', 'environment')
 

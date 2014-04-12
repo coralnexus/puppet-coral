@@ -16,7 +16,7 @@ class corl::system::ruby inherits corl::params::ruby {
     defaults  => {
       ensure => $corl::params::package_ensure
     },
-    require => [ File["${system_name}_env"], Corl::Package[$base_name] ]
+    require => [ Corl::Package[$base_name], Corl::File[$system_name], Corl::Exec["${system_name}_package_init"] ]
   }
 
   #---
@@ -65,17 +65,27 @@ class corl::system::ruby inherits corl::params::ruby {
   #-----------------------------------------------------------------------------
   # Actions
 
-  corl::exec { $system_name:
+  #$package_helper = "${corl::params::base_name}_package_helper_${corl::params::package_helper}"
+
+  corl::exec { "${system_name}_package_init":
     resources => {
       set_repository => {
-        command => $corl::params::ruby::set_repo_command,
-        require => Corl::Package[$corl::params::base_name],
-        notify  => 'package_update'
+        command     => ensure($corl::params::package_helper, $corl::params::ruby::set_repo_command),
+        subscribe   => Corl::Package[$corl::params::base_name],
+        refreshonly => true,
+        notify      => 'package_update'
       },
       package_update => {
-        command => $corl::params::ruby::package_update_command,
-        notify  => Corl::Package["${system_name}_core"]
-      },
+        command     => ensure($corl::params::package_helper, $corl::params::ruby::package_update_command),
+        subscribe   => 'set_repository',
+        refreshonly => true,
+        notify      => Corl::Package["${system_name}_core"]
+      }
+    }
+  }
+
+  corl::exec { $system_name:
+    resources => {
       active => {
         command     => $corl::params::ruby::set_active_command,
         refreshonly => true,

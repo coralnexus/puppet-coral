@@ -5,7 +5,7 @@ class corl::default {
     ubuntu : {
       # Ubuntu Common
 
-      $build_package_names  = ['build-essential', 'libnl-dev', 'libpopt-dev', 'libssl-dev', 'libcurl4-openssl-dev', 'libxslt-dev', 'libxml2-dev']
+      $build_package_names  = ['build-essential', 'libnl-dev', 'libpopt-dev', 'libssl-dev', 'libcurl4-openssl-dev', 'libxslt1-dev', 'libxml2-dev']
       $common_package_names = ['python-software-properties', 'vim', 'unzip', 'curl']
 
       # Ubuntu Ruby

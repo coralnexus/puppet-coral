@@ -29,13 +29,13 @@ class corl::system::puppet inherits corl::params::puppet {
       },
       extra_packages  => {
         name    => $corl::params::puppet::extra_package_names,
-        require => 'core_packages'
+        require => 'core_package'
       }
     },
     defaults  => {
       ensure => $corl::params::package_ensure
     },
-    require => Corl::Gem[$ruby_name]
+    require => [ Corl::Gem[$ruby_name], Corl::File[$system_name] ]
   }
 
   #-----------------------------------------------------------------------------

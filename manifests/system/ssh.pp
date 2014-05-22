@@ -42,7 +42,7 @@ class corl::system::ssh inherits corl::params::ssh {
       owner   => $corl::params::ssh::config_owner,
       group   => $corl::params::ssh::config_group,
       mode    => $corl::params::ssh::config_mode,
-      require => Corl::Package[$system_name]       
+      require => Corl::Package[$system_name]
     }
   }
 
@@ -51,26 +51,13 @@ class corl::system::ssh inherits corl::params::ssh {
   include corl::firewall::ssh
 
   #-----------------------------------------------------------------------------
-  # Actions
-
-  corl::exec { $system_name:
-    resources => {
-      reload => {
-        command     => $corl::params::ssh::init_command,
-        refreshonly => true,
-        subscribe   => File["${system_name}_sshd_conf"]
-      }
-    }
-  }
-
-  #-----------------------------------------------------------------------------
   # Services
 
   corl::service { $system_name:
     resources => {
       service => {
-        name   => $corl::params::ssh::service_name,
-        ensure => $corl::params::ssh::service_ensure,
+        name     => $corl::params::ssh::service_name,
+        ensure   => $corl::params::ssh::service_ensure,
       }
     },
     require => [ Corl::Service[$base_name], Corl::Package[$system_name] ]

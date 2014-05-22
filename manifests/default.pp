@@ -37,8 +37,6 @@ class corl::default {
       $ssh_package_names       = ['openssh-server']
       $ssh_extra_package_names = ['ssh-import-id']
 
-      $ssh_init_bin = '/etc/init.d/ssh'
-
       $sshd_config_file = '/etc/ssh/sshd_config'
       $ssh_config_file  = '/etc/ssh/ssh_config'
 

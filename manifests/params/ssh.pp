@@ -4,10 +4,6 @@ class corl::params::ssh inherits corl::default {
   $package_names       = module_array('ssh_package_names')
   $extra_package_names = module_array('ssh_extra_package_names')
 
-  $init_bin     = module_param('ssh_init_bin')
-  $init_reload  = module_param('ssh_init_reload', 'reload')
-  $init_command = module_param('ssh_init_command', "${init_bin} ${init_reload}")
-
   $sshd_config_file = module_param('sshd_config_file')
   $ssh_config_file  = module_param('ssh_config_file')
   $config_template  = module_param('ssh_config_template', 'sshconf')
@@ -50,7 +46,7 @@ class corl::params::ssh inherits corl::default {
     'AllowGroups'                     => [ 'root' ]
   })
   $port = interpolate($sshd_config['Port'], $sshd_config)
-    
+
   # For available options, see: http://unixhelp.ed.ac.uk/CGI/man-cgi?ssh_config+5
   $ssh_config = module_hash('ssh_config', {
     'Host' => {
@@ -61,11 +57,11 @@ class corl::params::ssh inherits corl::default {
         'GSSAPIAuthentication'      => 'yes',
         'GSSAPIDelegateCredentials' => 'no'
       }
-    }  
+    }
   })
 
   $firewall_name = module_param('firewall_ssh_name', '150 INPUT Allow new SSH connections')
 
-  $service_name   = module_param('ssh_service_name', 'ssh')
-  $service_ensure = module_param('ssh_service_ensure', 'running')
+  $service_name     = module_param('ssh_service_name', 'ssh')
+  $service_ensure   = module_param('ssh_service_ensure', 'running')
 }

@@ -1,7 +1,7 @@
 
-module CORL
+module Nucleon
 module Template
-class Sshconf < CORL.plugin_class(:template)
+class Sshconf < CORL.plugin_class(:nucleon, :template)
 
   #-----------------------------------------------------------------------------
   # Renderers  

@@ -1,7 +1,7 @@
 
-module CORL
+module Nucleon
 module Template
-class Puppetconf < CORL.plugin_class(:template)
+class Puppetconf < CORL.plugin_class(:nucleon, :template)
 
   #-----------------------------------------------------------------------------
   # Renderers  

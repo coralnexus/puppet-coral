@@ -1,7 +1,7 @@
 
-module CORL
+module Nucleon
 module Template
-class Sudoersconf < CORL.plugin_class(:template)
+class Sudoersconf < CORL.plugin_class(:nucleon, :template)
 
   #-----------------------------------------------------------------------------
   # Renderers  

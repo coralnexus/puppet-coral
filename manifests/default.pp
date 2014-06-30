@@ -57,10 +57,10 @@ class corl::default {
 
       case $::operatingsystemrelease {
         /^1[23].\d+$/: {
-          $puppet_package_ensure = '3.4.3-1puppetlabs1'
+          $puppet_package_ensure = '3.6.2-1puppetlabs1'
         }
         /^14.\d+$/: {
-          $puppet_package_ensure = '3.4.3-1'
+          $puppet_package_ensure = '3.6.2-1'
         }
       }
     }

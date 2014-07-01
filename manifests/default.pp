@@ -26,6 +26,7 @@ class corl::default {
       # Ubuntu Puppet
 
       $puppet_package_name        = 'puppet'
+      $puppet_package_ensure      = '3.6.2-1puppetlabs1'
       $puppet_extra_package_names = []
 
       $puppet_init_config_file = '/etc/default/puppet'
@@ -52,17 +53,6 @@ class corl::default {
       # Ubuntu CORL logging
 
       $log_dir = '/var/log/corl'
-
-      # Ubuntu release diferentiated properties
-
-      case $::operatingsystemrelease {
-        /^1[23].\d+$/: {
-          $puppet_package_ensure = '3.6.2-1puppetlabs1'
-        }
-        /^14.\d+$/: {
-          $puppet_package_ensure = '3.6.2-1'
-        }
-      }
     }
   }
 }

@@ -91,19 +91,4 @@ class corl::system::puppet inherits corl::params::puppet {
     },
     require => [ Corl::Service[$base_name], Corl::Package[$system_name] ]
   }
-
-  #---
-
-  corl::cron { $system_name:
-    resources => {
-      refresh => {
-        ensure      => $corl::params::puppet::cron_ensure,
-        environment => $corl::params::puppet::update_environment,
-        command     => $corl::params::puppet::update_command,
-        user        => $corl::params::puppet::cron_user,
-        minute      => $corl::params::puppet::update_interval
-      }
-    },
-    require => Corl::Service[$system_name]
-  }
 }

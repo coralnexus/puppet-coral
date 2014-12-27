@@ -11,8 +11,6 @@ class corl::params::puppet inherits corl::default {
 
   $extra_package_names = module_array('puppet_extra_package_names')
 
-  $bin = module_param('puppet_bin')
-
   $init_config_file = module_param('puppet_init_config_file')
   $daemon_env       = module_hash('puppet_daemon_env', {
     'DAEMON_OPTS' => ''
@@ -67,10 +65,4 @@ class corl::params::puppet inherits corl::default {
 
   $service_name    = module_param('puppet_service_name', 'puppet')
   $service_ensure  = module_param('puppet_service_ensure', 'stopped')
-
-  $cron_ensure        = module_param('puppet_cron_ensure', 'absent')
-  $cron_user          = module_param('puppet_cron_user', 'root')
-  $update_interval    = module_param('puppet_update_interval', '*/30')
-  $update_environment = module_param('puppet_update_environment', 'PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin')
-  $update_command     = module_param('puppet_update_command', "sudo ${bin} apply '${manifest}'")
 }

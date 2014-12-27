@@ -13,7 +13,6 @@ define corl::gem (
     resources => $resources,
     overrides => $overrides,
     defaults  => [ $defaults, { provider => 'gem' } ],
-    options   => $options,
-    require   => Corl::Package["${ruby_name}_extra"]
+    options   => $options
   }
 }

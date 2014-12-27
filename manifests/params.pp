@@ -6,10 +6,10 @@ class corl::params inherits corl::default {
   $base_name     = 'corl'
 
   $ruby_name     = "${base_name}_ruby"
-  $manage_ruby   = module_param('manage_ruby', false)
+  $manage_ruby   = module_param('manage_ruby', true)
 
   $puppet_name   = "${base_name}_puppet"
-  $manage_puppet = module_param('manage_puppet', false)
+  $manage_puppet = module_param('manage_puppet', true)
 
   $ssh_name      = "${base_name}_ssh"
   $manage_ssh    = module_param('manage_ssh', true)

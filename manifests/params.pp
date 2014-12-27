@@ -52,7 +52,7 @@ class corl::params inherits corl::default {
   $firewall_log_rejected_name        = module_param('firewall_log_rejected_name', '950 INPUT log all rejected')
   $firewall_reject_all_name          = module_param('firewall_reject_all_name', '999 Reject all')
 
-  $exec_path  = module_array('exec_path', ['/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin'])
+  $exec_path  = module_array('exec_path', $::path)
   $exec_user  = module_param('exec_user', 'root')
   $exec_group = module_param('exec_group', 'root')
 

@@ -39,7 +39,7 @@ class corl::default {
       # Ubuntu Puppet
 
       $puppet_package_name        = 'puppet'
-      $puppet_package_ensure      = '3.7.4-1puppetlabs1'
+      $puppet_package_ensure      = '3.7.5-1puppetlabs1'
       $puppet_extra_package_names = []
 
       $puppet_init_config_file = '/etc/default/puppet'

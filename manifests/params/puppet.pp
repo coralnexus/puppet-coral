@@ -33,7 +33,8 @@ class corl::params::puppet inherits corl::default {
       reportdir             => '$logdir/reports',
       reports               => 'store',
       hiera_config          => '$confdir/hiera.yaml',
-      tagmap                => '$confdir/tagmail.conf'
+      tagmap                => '$confdir/tagmail.conf',
+      ordering              => 'title-hash'
     }
   })
   $manifest                 = interpolate($config['main']['manifest'], $config['main'])

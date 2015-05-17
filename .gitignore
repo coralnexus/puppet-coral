@@ -4,3 +4,4 @@ pkg/
 
 # Nucleon project files
 .nucleon
+.project_cache

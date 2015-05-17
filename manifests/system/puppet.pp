@@ -74,6 +74,20 @@ class corl::system::puppet inherits corl::params::puppet {
       hiera_puppet_config => {
         path    => $corl::params::puppet::hiera_puppet_config_file,
         content => template($corl::params::puppet::hiera_puppet_config_template),
+      },
+      var_dir => {
+        path   => $corl::params::puppet::config['main']['vardir'],
+        ensure => directory,
+        owner  => $corl::params::puppet_user,
+        group  => $corl::params::puppet_group,
+        mode   => '775'
+      },
+      log_dir => {
+        path => $corl::params::puppet::config['main']['logdir'],
+        ensure => directory,
+        owner  => $corl::params::puppet_user,
+        group  => $corl::params::puppet_group,
+        mode   => '775'
       }
     },
     defaults => { notify => Service["${system_name}_service"] }

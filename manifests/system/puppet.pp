@@ -80,14 +80,14 @@ class corl::system::puppet inherits corl::params::puppet {
         ensure => directory,
         owner  => $corl::params::puppet_user,
         group  => $corl::params::puppet_group,
-        mode   => '775'
+        mode   => 0755
       },
       log_dir => {
         path => $corl::params::puppet::config['main']['logdir'],
         ensure => directory,
         owner  => $corl::params::puppet_user,
         group  => $corl::params::puppet_group,
-        mode   => '775'
+        mode   => 0750
       }
     },
     defaults => { notify => Service["${system_name}_service"] }

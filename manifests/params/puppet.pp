@@ -64,8 +64,8 @@ class corl::params::puppet inherits corl::default {
   $hiera_hierarchy  = module_array('hiera_hierarchy', 'common')
   $hiera_merge_type = module_param('hiera_merge_type', 'deeper')
 
-  $puppet_user      = module_param('puppet_user', 'puppet')
-  $puppet_group     = module_param('puppet_group', 'puppet')
+  $user  = module_param('puppet_user', 'puppet')
+  $group = module_param('puppet_group', 'puppet')
 
   $service_name    = module_param('puppet_service_name', 'puppet')
   $service_ensure  = module_param('puppet_service_ensure', 'stopped')

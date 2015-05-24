@@ -35,7 +35,7 @@ class corl::system::puppet inherits corl::params::puppet {
     defaults  => {
       ensure => $corl::params::package_ensure
     },
-    require => [ Corl::Gem[$ruby_name], Corl::File[$system_name] ]
+    require => [ Corl::Gem[$ruby_name], Corl::File["${system_name}_config"], Corl::File["${system_name}_directories"] ]
   }
 
   #-----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ class corl::system::puppet inherits corl::params::puppet {
   $hiera_hierarchy  = $corl::params::puppet::hiera_hierarchy
   $hiera_backends   = $corl::params::puppet::hiera_backends
 
-  corl::file { $system_name:
+  corl::file { "${system_name}_config":
     resources => {
       init_conf => {
         path    => $corl::params::puppet::init_config_file,
@@ -74,23 +74,28 @@ class corl::system::puppet inherits corl::params::puppet {
       hiera_puppet_config => {
         path    => $corl::params::puppet::hiera_puppet_config_file,
         content => template($corl::params::puppet::hiera_puppet_config_template),
-      },
+      }
+    },
+    defaults => { notify => Service["${system_name}_service"] }
+  }
+
+  corl::file { "${system_name}_directories":
+    resources => {
       var_dir => {
         path   => $corl::params::puppet::config['main']['vardir'],
         ensure => directory,
-        owner  => $corl::params::puppet_user,
-        group  => $corl::params::puppet_group,
+        owner  => $corl::params::puppet::user,
+        group  => $corl::params::puppet::group,
         mode   => 0755
       },
       log_dir => {
         path => $corl::params::puppet::config['main']['logdir'],
         ensure => directory,
-        owner  => $corl::params::puppet_user,
-        group  => $corl::params::puppet_group,
+        owner  => $corl::params::puppet::user,
+        group  => $corl::params::puppet::group,
         mode   => 0750
       }
-    },
-    defaults => { notify => Service["${system_name}_service"] }
+    }
   }
 
   #-----------------------------------------------------------------------------
